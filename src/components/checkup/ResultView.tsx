@@ -63,6 +63,8 @@ export function ResultView({ result, onReset, isSavedInitial = false }: ResultVi
       console.error('Save error:', err);
       if (err.message?.includes('relation') || err.message?.includes('does not exist')) {
         setSaveErrorMsg('Tabel database "checkups" belum dibuat di Supabase. Mohon jalankan skrip supabase/schema.sql di SQL Editor Supabase terlebih dahulu.');
+      } else if (err.message?.includes('permission denied')) {
+        setSaveErrorMsg('Izin akses tabel di Supabase belum diberikan ke role "authenticated". Buka SQL Editor di Supabase dan jalankan: GRANT ALL ON TABLE public.checkups TO authenticated;');
       } else {
         setSaveErrorMsg(err.message || 'Gagal menyimpan hasil ke akun cloud.');
       }

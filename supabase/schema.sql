@@ -34,29 +34,45 @@ CREATE INDEX IF NOT EXISTS idx_checkups_user_type ON public.checkups(user_id, ch
 -- 3. Enable Row Level Security (RLS)
 ALTER TABLE public.checkups ENABLE ROW LEVEL SECURITY;
 
--- 4. RLS Policy: Users can only SELECT (read) their own checkup data
+-- 4. Grant table privileges to authenticated and service_role
+-- (Wajib agar role pengguna 'authenticated' diizinkan mengakses tabel, 
+-- sedangkan baris mana yang bisa diakses tetap dibatasi ketat oleh RLS di bawah ini)
+GRANT ALL ON TABLE public.checkups TO authenticated;
+GRANT ALL ON TABLE public.checkups TO service_role;
+
+-- 5. Drop existing policies if re-running script (mencegah error "policy already exists")
+DROP POLICY IF EXISTS "Users can only view their own checkups" ON public.checkups;
+DROP POLICY IF EXISTS "Users can only insert their own checkups" ON public.checkups;
+DROP POLICY IF EXISTS "Users can only update their own checkups" ON public.checkups;
+DROP POLICY IF EXISTS "Users can only delete their own checkups" ON public.checkups;
+
+-- 6. RLS Policy: Users can only SELECT (read) their own checkup data
 CREATE POLICY "Users can only view their own checkups"
 ON public.checkups
 FOR SELECT
+TO authenticated
 USING (auth.uid() = user_id);
 
--- 5. RLS Policy: Users can only INSERT (create) checkup records for themselves
+-- 7. RLS Policy: Users can only INSERT (create) checkup records for themselves
 CREATE POLICY "Users can only insert their own checkups"
 ON public.checkups
 FOR INSERT
+TO authenticated
 WITH CHECK (auth.uid() = user_id);
 
--- 6. RLS Policy: Users can only UPDATE their own checkup records
+-- 8. RLS Policy: Users can only UPDATE their own checkup records
 CREATE POLICY "Users can only update their own checkups"
 ON public.checkups
 FOR UPDATE
+TO authenticated
 USING (auth.uid() = user_id)
 WITH CHECK (auth.uid() = user_id);
 
--- 7. RLS Policy: Users can only DELETE their own checkup records
+-- 9. RLS Policy: Users can only DELETE their own checkup records
 CREATE POLICY "Users can only delete their own checkups"
 ON public.checkups
 FOR DELETE
+TO authenticated
 USING (auth.uid() = user_id);
 
 -- ==============================================================================
@@ -73,4 +89,3 @@ USING (auth.uid() = user_id);
 --    INSERT INTO checkups (user_id, ...) VALUES (User B ID, ...); -> DITOLAK (RLS violation).
 --    DELETE FROM checkups WHERE user_id = User B ID; -> Tidak mempengaruhi baris User B (0 rows affected).
 -- ==============================================================================
-
