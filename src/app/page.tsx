@@ -27,20 +27,26 @@ export default function HomePage() {
     async function loadLatest() {
       setIsLoading(true);
       try {
+        let latest: EvaluationResult | null = null;
         if (user) {
-          const remote = await getRemoteCheckups(user.id);
-          if (remote.length > 0) {
-            setLatestCheckup(remote[0]);
-            setIsLoading(false);
-            return;
+          try {
+            const remote = await getRemoteCheckups(user.id);
+            if (remote.length > 0) {
+              latest = remote[0];
+            }
+          } catch (remoteErr: any) {
+            console.warn('Gagal memuat checkup terbaru dari cloud:', remoteErr?.message);
           }
         }
-        const local = await getLocalCheckups();
-        if (local.length > 0) {
-          setLatestCheckup(local[0]);
-        } else {
-          setLatestCheckup(null);
+
+        if (!latest) {
+          const local = await getLocalCheckups();
+          if (local.length > 0) {
+            latest = local[0];
+          }
         }
+
+        setLatestCheckup(latest);
       } catch (err) {
         console.error('Error loading latest checkup:', err);
       } finally {

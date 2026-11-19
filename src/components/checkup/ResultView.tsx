@@ -41,22 +41,29 @@ export function ResultView({ result, onReset, isSavedInitial = false }: ResultVi
     setSaveSuccessMsg(null);
 
     try {
+      // 1. Selalu simpan ke database lokal browser (IndexedDB) terlebih dahulu sebagai perlindungan
+      await saveLocalCheckup(result);
+      setIsSaved(true);
+
+      // 2. Jika akun sudah login dan Supabase terkonfigurasi, simpan juga ke Cloud
       if (user && isConfigured) {
-        // Save to Supabase Cloud
-        await saveRemoteCheckup(result, user.id);
-        // Also keep a copy locally for offline access
-        await saveLocalCheckup(result);
-        setIsSaved(true);
-        setSaveSuccessMsg('Hasil berhasil disimpan ke akun cloud dan perangkat ini.');
+        try {
+          await saveRemoteCheckup(result, user.id);
+          setSaveSuccessMsg('Hasil berhasil disimpan ke akun cloud dan perangkat ini.');
+        } catch (cloudErr: any) {
+          console.warn('Gagal menyimpan ke Supabase cloud:', cloudErr);
+          if (cloudErr.message?.includes('relation') || cloudErr.message?.includes('does not exist')) {
+            setSaveSuccessMsg('Hasil tersimpan di perangkat ini. Catatan: Tabel database Supabase belum dibuat, silakan jalankan skrip supabase/schema.sql di SQL Editor Supabase.');
+          } else {
+            setSaveSuccessMsg(`Hasil tersimpan di perangkat ini. (Koneksi cloud: ${cloudErr.message})`);
+          }
+        }
       } else if (forceCloud && isConfigured && !user) {
-        // Open auth modal so user can login and save to cloud
+        // Buka modal login jika pengguna menekan Simpan ke Cloud
         setAuthModalOpen(true);
         setIsSaving(false);
         return;
       } else {
-        // Save locally to IndexedDB
-        await saveLocalCheckup(result);
-        setIsSaved(true);
         setSaveSuccessMsg('Hasil berhasil disimpan di perangkat ini (penyimpanan lokal browser).');
       }
     } catch (err: any) {

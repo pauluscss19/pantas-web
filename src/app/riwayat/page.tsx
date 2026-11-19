@@ -41,13 +41,26 @@ export default function RiwayatPage() {
   const loadData = async () => {
     setIsLoading(true);
     try {
+      // Ambil data lokal terlebih dahulu
+      const local = await getLocalCheckups();
+      let combined: EvaluationResult[] = [...local];
+
+      // Jika user sedang login, ambil juga data remote dari Supabase
       if (user && isConfigured) {
-        const remote = await getRemoteCheckups(user.id);
-        setCheckups(remote);
-      } else {
-        const local = await getLocalCheckups();
-        setCheckups(local);
+        try {
+          const remote = await getRemoteCheckups(user.id);
+          if (remote.length > 0) {
+            const localMap = new Map(local.map((item) => [item.id, item]));
+            remote.forEach((r) => localMap.set(r.id, r));
+            combined = Array.from(localMap.values());
+          }
+        } catch (remoteErr: any) {
+          console.warn('Gagal memuat dari Supabase cloud:', remoteErr?.message);
+        }
       }
+
+      combined.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      setCheckups(combined);
     } catch (err) {
       console.error('Error loading checkups:', err);
     } finally {
