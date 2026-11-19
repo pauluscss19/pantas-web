@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #F7F8F3;
+  --foreground: #202923;
+  --primary: #244B3B;
+  --soft-green: #E7EEE7;
+  --border-subtle: #D3DDD3;
+}
+
+body {
+  color: var(--foreground);
+  background-color: var(--background);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Accessible focus outline */
+*:focus-visible {
+  outline: 2px solid #244B3B;
+  outline-offset: 2px;
+}
+
+/* Touch friendly minimums */
+button, input, select, textarea, a {
+  touch-action: manipulation;
+}
+
+/* Print Stylesheet for clean summary print */
+@media print {
+  nav, .no-print, header, footer, button.action-btn {
+    display: none !important;
+  }
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 14px !important;
+  }
+  .print-page {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+}
