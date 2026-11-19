@@ -11,8 +11,8 @@ import {
   RotateCcw,
   Printer,
   ChevronRight,
-  Cloud,
   Check,
+  LogIn,
 } from 'lucide-react';
 import { EvaluationResult, StatusLevel } from '@/lib/types';
 import { saveLocalCheckup } from '@/lib/storage/indexedDb';
@@ -35,39 +35,36 @@ export function ResultView({ result, onReset, isSavedInitial = false }: ResultVi
   const [saveErrorMsg, setSaveErrorMsg] = useState<string | null>(null);
   const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
 
-  const handleSave = async (forceCloud = false) => {
+  const handleSave = async () => {
     setIsSaving(true);
     setSaveErrorMsg(null);
     setSaveSuccessMsg(null);
 
-    try {
-      // 1. Selalu simpan ke database lokal browser (IndexedDB) terlebih dahulu sebagai perlindungan
-      await saveLocalCheckup(result);
-      setIsSaved(true);
+    // Fitur riwayat hanya bisa diakses saat sudah login
+    if (!user) {
+      setAuthModalOpen(true);
+      setIsSaving(false);
+      return;
+    }
 
-      // 2. Jika akun sudah login dan Supabase terkonfigurasi, simpan juga ke Cloud
-      if (user && isConfigured) {
-        try {
-          await saveRemoteCheckup(result, user.id);
-          setSaveSuccessMsg('Hasil berhasil disimpan ke akun cloud dan perangkat ini.');
-        } catch (cloudErr: any) {
-          console.warn('Gagal menyimpan ke Supabase cloud:', cloudErr);
-          if (cloudErr.message?.includes('relation') || cloudErr.message?.includes('does not exist')) {
-            setSaveSuccessMsg('Hasil tersimpan di perangkat ini. Catatan: Tabel database Supabase belum dibuat, silakan jalankan skrip supabase/schema.sql di SQL Editor Supabase.');
-          } else {
-            setSaveSuccessMsg(`Hasil tersimpan di perangkat ini. (Koneksi cloud: ${cloudErr.message})`);
-          }
-        }
-      } else if (forceCloud && isConfigured && !user) {
-        // Buka modal login jika pengguna menekan Simpan ke Cloud
-        setAuthModalOpen(true);
-        setIsSaving(false);
-        return;
+    try {
+      if (isConfigured) {
+        await saveRemoteCheckup(result, user.id);
+        await saveLocalCheckup(result);
+        setIsSaved(true);
+        setSaveSuccessMsg('Hasil berhasil disimpan ke riwayat akun cloud Anda.');
       } else {
-        setSaveSuccessMsg('Hasil berhasil disimpan di perangkat ini (penyimpanan lokal browser).');
+        await saveLocalCheckup(result);
+        setIsSaved(true);
+        setSaveSuccessMsg('Hasil berhasil disimpan ke perangkat ini.');
       }
     } catch (err: any) {
-      setSaveErrorMsg(err.message || 'Gagal menyimpan hasil.');
+      console.error('Save error:', err);
+      if (err.message?.includes('relation') || err.message?.includes('does not exist')) {
+        setSaveErrorMsg('Tabel database "checkups" belum dibuat di Supabase. Mohon jalankan skrip supabase/schema.sql di SQL Editor Supabase terlebih dahulu.');
+      } else {
+        setSaveErrorMsg(err.message || 'Gagal menyimpan hasil ke akun cloud.');
+      }
     } finally {
       setIsSaving(false);
     }
@@ -364,28 +361,26 @@ export function ResultView({ result, onReset, isSavedInitial = false }: ResultVi
         )}
 
         <div className="flex flex-wrap items-center gap-3">
-          {/* Tombol Simpan Hasil */}
-          <button
-            onClick={() => handleSave(false)}
-            disabled={isSaving || isSaved}
-            className={`action-btn flex items-center gap-2 px-4 py-2.5 rounded font-medium text-sm transition-colors ${
-              isSaved
-                ? 'bg-pantas-soft text-pantas-primary border border-pantas-primary cursor-default'
-                : 'bg-pantas-primary text-white hover:bg-pantas-primary-hover shadow-sm'
-            }`}
-          >
-            {isSaved ? <Check className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
-            <span>{isSaved ? 'Hasil Sudah Tersimpan' : 'Simpan Hasil Pemeriksaan'}</span>
-          </button>
-
-          {/* Jika belum login dan Supabase aktif, beri tombol simpan ke cloud */}
-          {!user && isConfigured && (
+          {user ? (
             <button
-              onClick={() => handleSave(true)}
-              className="action-btn flex items-center gap-2 px-4 py-2.5 border border-pantas-border rounded font-medium text-sm text-pantas-dark hover:bg-pantas-soft hover:text-pantas-primary transition-colors"
+              onClick={() => handleSave()}
+              disabled={isSaving || isSaved}
+              className={`action-btn flex items-center gap-2 px-4 py-2.5 rounded font-medium text-sm transition-colors ${
+                isSaved
+                  ? 'bg-pantas-soft text-pantas-primary border border-pantas-primary cursor-default'
+                  : 'bg-pantas-primary text-white hover:bg-pantas-primary-hover shadow-sm'
+              }`}
             >
-              <Cloud className="w-4 h-4 text-pantas-primary" />
-              <span>Simpan ke Cloud (Masuk Akun)</span>
+              {isSaved ? <Check className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
+              <span>{isSaved ? 'Tersimpan di Riwayat Akun' : 'Simpan Hasil ke Riwayat Akun'}</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => handleSave()}
+              className="action-btn flex items-center gap-2 px-4 py-2.5 bg-pantas-primary text-white rounded font-medium text-sm hover:bg-pantas-primary-hover shadow-sm transition-colors"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Masuk untuk Simpan ke Riwayat</span>
             </button>
           )}
 
@@ -413,7 +408,7 @@ export function ResultView({ result, onReset, isSavedInitial = false }: ResultVi
       <AuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
-        onSuccess={() => handleSave(false)}
+        onSuccess={() => handleSave()}
       />
     </div>
   );

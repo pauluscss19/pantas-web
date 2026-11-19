@@ -12,41 +12,36 @@ import {
   Calendar,
   CheckCircle2,
   HelpCircle,
+  Lock,
+  LogIn,
 } from 'lucide-react';
 import { EvaluationResult } from '@/lib/types';
-import { getLocalCheckups } from '@/lib/storage/indexedDb';
 import { useAuth } from '@/components/auth/AuthContext';
 import { getRemoteCheckups } from '@/lib/supabase/repository';
+import { AuthModal } from '@/components/auth/AuthModal';
 
 export default function HomePage() {
   const { user } = useAuth();
   const [latestCheckup, setLatestCheckup] = useState<EvaluationResult | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   useEffect(() => {
     async function loadLatest() {
+      if (!user) {
+        setLatestCheckup(null);
+        setIsLoading(false);
+        return;
+      }
+
       setIsLoading(true);
       try {
-        let latest: EvaluationResult | null = null;
-        if (user) {
-          try {
-            const remote = await getRemoteCheckups(user.id);
-            if (remote.length > 0) {
-              latest = remote[0];
-            }
-          } catch (remoteErr: any) {
-            console.warn('Gagal memuat checkup terbaru dari cloud:', remoteErr?.message);
-          }
+        const remote = await getRemoteCheckups(user.id);
+        if (remote.length > 0) {
+          setLatestCheckup(remote[0]);
+        } else {
+          setLatestCheckup(null);
         }
-
-        if (!latest) {
-          const local = await getLocalCheckups();
-          if (local.length > 0) {
-            latest = local[0];
-          }
-        }
-
-        setLatestCheckup(latest);
       } catch (err) {
         console.error('Error loading latest checkup:', err);
       } finally {
@@ -145,7 +140,7 @@ export default function HomePage() {
       <section className="space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold text-pantas-dark">Pemeriksaan Terakhir Anda</h2>
-          {latestCheckup && (
+          {user && latestCheckup && (
             <Link
               href="/riwayat"
               className="text-xs font-medium text-pantas-primary hover:underline flex items-center gap-1"
@@ -159,6 +154,28 @@ export default function HomePage() {
         {isLoading ? (
           <div className="p-6 bg-white border border-pantas-border rounded-lg text-sm text-pantas-muted">
             Memuat catatan pemeriksaan...
+          </div>
+        ) : !user ? (
+          /* Locked State for Guest */
+          <div className="p-6 bg-white border border-pantas-border rounded-lg text-center space-y-3">
+            <div className="w-12 h-12 mx-auto rounded-full bg-pantas-soft flex items-center justify-center text-pantas-primary">
+              <Lock className="w-6 h-6" />
+            </div>
+            <div className="max-w-md mx-auto">
+              <h3 className="font-semibold text-pantas-dark text-base">Riwayat Memerlukan Akun</h3>
+              <p className="text-sm text-pantas-muted mt-1 leading-relaxed">
+                Fitur penyimpanan riwayat dan grafik perkembangan kesehatan hanya dapat diakses setelah masuk ke akun PANTAS. Anda tetap dapat melakukan pemeriksaan awal secara mandiri.
+              </p>
+            </div>
+            <div className="pt-2 flex justify-center gap-3">
+              <button
+                onClick={() => setAuthModalOpen(true)}
+                className="px-4 py-2 bg-pantas-primary text-white text-xs font-semibold rounded hover:bg-pantas-primary-hover transition-colors inline-flex items-center gap-1.5"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Masuk atau Buat Akun</span>
+              </button>
+            </div>
           </div>
         ) : latestCheckup ? (
           <div className="p-5 bg-white border border-pantas-border rounded-lg space-y-4 shadow-sm">
@@ -216,7 +233,7 @@ export default function HomePage() {
             </div>
           </div>
         ) : (
-          /* Empty state - JANGAN diisi data contoh palsu */
+          /* Empty state for logged in user who hasn't saved checkups yet */
           <div className="p-6 bg-white border border-pantas-border rounded-lg text-center space-y-3">
             <div className="w-12 h-12 mx-auto rounded-full bg-pantas-soft flex items-center justify-center text-pantas-primary">
               <HelpCircle className="w-6 h-6" />
@@ -224,7 +241,7 @@ export default function HomePage() {
             <div className="max-w-md mx-auto">
               <h3 className="font-semibold text-pantas-dark text-base">Belum Ada Riwayat Pemeriksaan</h3>
               <p className="text-sm text-pantas-muted mt-1 leading-relaxed">
-                Anda belum pernah menyimpan hasil pemeriksaan di perangkat ini. Klik tombol di bawah untuk memulai penilaian faktor risiko dan pemantauan mandiri pertama Anda.
+                Akun Anda belum memiliki catatan pemeriksaan. Mulai pemeriksaan pertama Anda sekarang untuk mencatat data kesehatan.
               </p>
             </div>
             <div className="pt-2 flex justify-center gap-3">
@@ -286,9 +303,15 @@ export default function HomePage() {
       <section className="p-4 rounded-lg bg-neutral-100/70 border border-neutral-200 text-xs text-pantas-muted leading-relaxed">
         <p className="font-medium text-pantas-dark mb-1">Prinsip Privasi PANTAS:</p>
         <p>
-          Pemeriksaan awal dan materi edukasi dapat digunakan sepenuhnya tanpa perlu mendaftar atau masuk ke akun. Hasil pemeriksaan disimpan di perangkat lokal (browser) Anda atas pilihan Anda sendiri. Bila Anda ingin mengakses riwayat dari perangkat lain, Anda dapat menggunakan akun online terlindungi Row Level Security. Kami tidak pernah meminta NIK, nomor telepon, atau data sensitif yang tidak diperlukan.
+          Pemeriksaan awal dan materi edukasi dapat digunakan sepenuhnya tanpa perlu mendaftar atau masuk ke akun. Bila Anda ingin menyimpan riwayat secara online dan memantau grafiknya dari waktu ke waktu, Anda dapat menggunakan akun PANTAS yang terlindungi Row Level Security. Kami tidak pernah meminta NIK, nomor telepon, atau data sensitif yang tidak diperlukan.
         </p>
       </section>
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+      />
     </div>
   );
 }
