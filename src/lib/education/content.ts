@@ -365,5 +365,116 @@ export const EDUCATION_ARTICLES: EducationArticle[] = [
       },
     ],
   },
+  {
+    id: 'edu-mitos-menu-dm',
+    title: 'Mitos vs Fakta Diabetes & Panduan Contoh Menu Sehari (Diet 3J)',
+    category: 'diabetes',
+    readTimeMinutes: 4,
+    summary:
+      'Kupas tuntas mitos konsumsi nasi, mitos obat merusak ginjal, serta panduan menu makan sehat sehari (Pagi, Siang, Malam, Selingan) lengkap dengan prinsip 3J.',
+    sections: [
+      {
+        heading: 'Mitos vs Fakta Seputar Diabetes',
+        content: [
+          'Banyak informasi yang kurang tepat beredar di masyarakat mengenai diabetes melitus. Mari kita luruskan faktanya:',
+        ],
+        tips: [
+          'Mitos: Makan manis sekali langsung terkena diabetes. -> Fakta: Diabetes terjadi karena penumpukan gula dan kalori berlebih selama bertahun-tahun, ditambah faktor obesitas dan riwayat keturunan.',
+          'Mitos: Penderita diabetes tidak boleh makan nasi sama sekali. -> Fakta: Boleh makan nasi dalam porsi terukur (1/4 piring), dan lebih dianjurkan memilih beras merah atau karbohidrat tinggi serat.',
+          'Mitos: Obat diabetes merusak ginjal jika diminum terus. -> Fakta: Justru kadar gula darah yang tinggi dan tidak terkontrol yang merusak pembuluh darah ginjal hingga memicu gagal ginjal.',
+          'Mitos: Luka kecil di kaki tidak berbahaya. -> Fakta: Pada penyandang diabetes, luka kecil bisa cepat membesar, bernanah, dan sulit sembuh karena sirkulasi darah terganggu.',
+        ],
+      },
+      {
+        heading: 'Prinsip Diet 3J: Jumlah, Jenis, Jadwal',
+        content: [
+          '1. Jumlah: Porsi tidak berlebihan. Terapkan prinsip Piring T: 1/2 piring sayur & buah, 1/4 nasi merah, 1/4 lauk berprotein (ikan, ayam tanpa kulit, tahu/tempe).',
+          '2. Jenis: HINDARI gula pasir, sirup, kue manis, boba, soda, gorengan, jeroan, dan makanan super asin. PILIH beras merah, ubi rebus, sayur hijau, ikan kukus/bakar, dan buah segar (apel, pir, jambu).',
+          '3. Jadwal: Makan teratur dengan 3x makan utama + 2x selingan sehat. Jangan telat makan agar gula darah stabil.',
+        ],
+      },
+      {
+        heading: 'Contoh Menu Sehari PANTAS',
+        content: [
+          'Berikut inspirasi menu makan harian yang sehat dan bergizi:',
+        ],
+        tips: [
+          'Pagi: Nasi merah + telur rebus + sayur bayam bening.',
+          'Selingan Pagi (Pukul 10.00): 1 buah apel kecil atau pir.',
+          'Siang: Nasi merah + ikan bakar/kukus + tahu kukus + lalapan sayur segar.',
+          'Selingan Sore (Pukul 16.00): Ubi rebus atau kacang sangrai.',
+          'Malam: Nasi merah + tumis dada ayam tanpa kulit + capcay sayur.',
+          'Kebutuhan Cairan: Minum air putih minimal 8 gelas per hari.',
+        ],
+      },
+    ],
+    sources: [
+      {
+        institution: 'Puskesmas Karangawen I & Kemenkes RI',
+        documentTitle: 'Buku Panduan Edukasi Diabetes Melitus PANTAS',
+        reviewDate: 'Ditinjau: 2024',
+      },
+    ],
+  },
+  {
+    id: 'edu-pencegahan-ht',
+    title: '9 Langkah Pencegahan Hipertensi & Mengenali Bahaya Silent Killer',
+    category: 'hipertensi',
+    readTimeMinutes: 4,
+    summary:
+      'Tekanan darah tinggi sering dijuluki Silent Killer karena kerap tanpa gejala. Pelajari definisi, gejala yang sering muncul, komplikasi, dan 9 langkah pencegahan resmi Kemenkes.',
+    sections: [
+      {
+        heading: 'Definisi & Gejala yang Sering Muncul',
+        content: [
+          'Hipertensi didefinisikan sebagai hasil pengukuran tekanan darah sistolik ≥140 mmHg dan/atau diastolik ≥90 mmHg setelah dilakukan pemeriksaan berulang pada usia dewasa (>18 tahun).',
+          'Karena sering tidak menunjukkan keluhan di awal ("silent killer"), perhatikan tanda-tanda berikut:',
+        ],
+        tips: [
+          'Sakit kepala atau rasa berat di kepala.',
+          'Leher terasa kencang atau kaku di bagian tengkuk.',
+          'Mudah marah atau gelisah tanpa sebab jelas.',
+          'Telinga berdengung (tinnitus).',
+          'Mata berkunang-kunang atau pandangan kabur.',
+        ],
+      },
+      {
+        heading: '9 Langkah Nyata Pencegahan Hipertensi (Kemenkes RI)',
+        content: [
+          'Kementerian Kesehatan merekomendasikan 9 langkah terpadu berikut:',
+        ],
+        tips: [
+          '1. Kurangi Garam: Batasi konsumsi garam tidak lebih dari 1 sendok teh (5 gram) per hari. Hindari ikan asin, mie instan, dan makanan kaleng.',
+          '2. Makan Makanan Bergizi Seimbang: Perbanyak sayur, buah, kacang-kacangan, gandum utuh, dan makanan rendah lemak jenuh.',
+          '3. Jaga Berat Badan Ideal: Kelebihan berat badan meningkatkan beban kerja jantung. Turunkan 5–10% berat badan bila berlebih.',
+          '4. Rutin Berolahraga: Lakukan aktivitas fisik minimal 30 menit sehari, 5 hari seminggu (jalan cepat, bersepeda, berenang, senam).',
+          '5. Berhenti Merokok: Nikotin menyebabkan penyempitan pembuluh darah dan memicu stroke.',
+          '6. Batasi / Hindari Alkohol.',
+          '7. Kelola Stres: Redakan ketegangan dengan relaksasi, meditasi, ibadah, hobi, dan mendengarkan musik.',
+          '8. Tidur Cukup: Tidur 7–9 jam setiap malam untuk menjaga keseimbangan hormon dan tekanan darah.',
+          '9. Periksa Tekanan Darah Secara Berkala: Pantau tensi secara rutin di Puskesmas atau fasilitas kesehatan.',
+        ],
+      },
+      {
+        heading: 'Waspada Komplikasi Berat',
+        content: [
+          'Tekanan darah tinggi yang dibiarkan bertahun-tahun merusak organ vital tubuh:',
+        ],
+        tips: [
+          'Stroke: Akibat pecah atau tersumbatnya pembuluh darah di otak.',
+          'Gagal Jantung & Serangan Jantung: Karena jantung dipaksa memompa melawan tekanan tinggi terus-menerus.',
+          'Gagal Ginjal Kronis: Kerusakan saringan darah ginjal hingga memerlukan cuci darah.',
+          'Retinopati Hipertensi: Kerusakan pembuluh darah mata hingga menyebabkan kebutaan.',
+        ],
+      },
+    ],
+    sources: [
+      {
+        institution: 'Kementerian Kesehatan RI & Puskesmas Karangawen I',
+        documentTitle: 'Infografis 9 Langkah Pencegahan Hipertensi & Modul PANTAS',
+        reviewDate: 'Ditinjau: 2024',
+      },
+    ],
+  },
 ];
 

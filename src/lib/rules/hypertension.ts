@@ -231,33 +231,35 @@ export function evaluateHipertensi(input: HipertensiFormInput): EvaluationResult
     });
   }
 
-  // 4. Next Steps
+  // 4. Next Steps (Directly aligned with Document Table)
   const nextSteps: string[] = [];
 
   if (redFlags.isTriggered) {
-    nextSteps.push('Prioritas: Segera temui tenaga medis di IGD atau Puskesmas untuk evaluasi gejala darurat.');
+    nextSteps.push('SEGERA KE IGD / FASILITAS KESEHATAN: Ditemukan kondisi tanda bahaya krisis hipertensi atau keluhan darurat.');
   }
 
   if (measurement.statusLevel === 'tinggi') {
-    nextSteps.push(
-      'Tekanan darah yang Anda masukkan berada di atas ambang pemeriksaan awal. Lakukan pemeriksaan ulang dan konsultasikan hasilnya kepada tenaga kesehatan.'
-    );
-    nextSteps.push(
-      'Bila Anda sudah memiliki resep obat penurun tekanan darah dari dokter, konsumsilah secara teratur dan jangan mengubah dosis tanpa anjuran dokter.'
-    );
-  } else if (!input.hasTestedBP) {
-    nextSteps.push(
-      'Kunjungi Puskesmas, Posbindu, atau apotek terdekat untuk melakukan pengukuran tekanan darah menggunakan tensimeter yang telah terkalibrasi.'
-    );
+    nextSteps.push('Mengonsumsi obat antihipertensi secara teratur sesuai anjuran dokter.');
+    nextSteps.push('Tidak menghentikan obat tanpa konsultasi dengan dokter, meskipun tekanan darah sudah terasa normal.');
+    nextSteps.push('Diet Rendah Garam: Garam maksimal 1 sdt/hari (5 gram). Hindari ikan asin, kerupuk, mie instan, makanan kaleng, fast food, gorengan, jeroan, santan kental, dan kulit ayam. Perbanyak sayur, buah, ikan bakar/kukus, dan tahu tempe kukus.');
+    nextSteps.push('Melakukan aktivitas fisik secara teratur (jalan kaki cepat, berenang, bersepeda) 30 menit 5 kali dalam seminggu.');
+    nextSteps.push('Menjaga berat badan ideal (target IMT 18,5 - <25,0).');
+    nextSteps.push('Menghindari rokok dan paparan asap rokok, serta hindari konsumsi alkohol.');
+    nextSteps.push('Mengelola stres dengan baik (bisa dengan meditasi, hobi, dan mendengarkan musik).');
+    nextSteps.push('Tidur cukup 7–8 jam per hari, kelola stres, dan jangan begadang.');
+    nextSteps.push('Memantau tekanan darah secara berkala ke fasilitas kesehatan.');
+    nextSteps.push('Waspada komplikasi jangka panjang: stroke, serangan jantung, gagal ginjal, dan gangguan penglihatan/kebutaan.');
+  } else if (measurement.statusLevel === 'perhatian' || (!input.hasTestedBP && (input.familyHistory === 'ya' || input.saltyFoodHabit === 'sering' || input.smokingStatus === 'merokok' || bmiCategory !== 'normal'))) {
+    nextSteps.push('Konsumsi makanan rendah garam atau asin (batasi garam maksimal 1 sendok teh per hari).');
+    nextSteps.push('Rutin olahraga 150 menit/minggu (jalan cepat, bersepeda santai, atau berenang).');
+    nextSteps.push('Manajemen stres dengan baik (meditasi, hobi, dan mendengarkan musik santai).');
+    nextSteps.push('Tidur yang cukup 7–8 jam per hari dan hindari kebiasaan begadang.');
+    nextSteps.push('Rutin cek tekanan darah secara berkala (lakukan pemantauan 1 minggu sekali selama 1 bulan).');
+  } else {
+    nextSteps.push('Pertahankan tekanan darah normal dengan rumus CERDIK: Cek tensi 6 bulan sekali, Enyahkan asap rokok & alkohol, Rajin aktivitas fisik (jalan cepat 30 menit x 5/minggu), Diet seimbang, Istirahat cukup 7-8 jam, dan Kelola stres.');
+    nextSteps.push('Tetap batasi garam dapur maksimal 1 sendok teh/hari (5 gram).');
+    nextSteps.push('Hindari konsumsi makanan asin berlebih (ikan asin, kerupuk, mie instan, makanan kaleng), gorengan & jeroan, serta batasi kopi dan minuman berenergi.');
   }
-
-  nextSteps.push(
-    'Batasi asupan garam dapur dan makanan tinggi natrium (kecap asin, ikan asin, kerupuk, makanan kaleng) maksimal 1 sendok teh per hari.'
-  );
-  nextSteps.push(
-    'Lakukan aktivitas fisik jalan kaki cepat atau bersepeda santai minimal 30 menit sehari, 5 hari dalam seminggu.'
-  );
-  nextSteps.push('Terapkan pola istirahat teratur (tidur 7–8 jam per hari) dan kelola stres dengan baik.');
 
   // 5. Relevant Education Articles
   const educationIds: string[] = ['edu-ht-basics', 'edu-cerdik', 'edu-ggl', 'edu-kepatuhan-obat'];

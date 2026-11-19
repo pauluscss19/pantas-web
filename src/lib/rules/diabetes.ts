@@ -253,26 +253,32 @@ export function evaluateDiabetes(input: DiabetesFormInput): EvaluationResult {
     });
   }
 
-  // 4. Next Steps
+  // 4. Next Steps (Directly aligned with Document Table)
   const nextSteps: string[] = [];
 
   if (redFlags.isTriggered) {
-    nextSteps.push('Prioritas utama: Segera kunjungi IGD atau Puskesmas untuk evaluasi kondisi gawat darurat.');
+    nextSteps.push('SEGERA KE IGD / FASILITAS KESEHATAN: Ditemukan kondisi darurat medis. Jangan menunda pertolongan.');
   }
 
-  if (measurement.statusLevel === 'tinggi' || measurement.statusLevel === 'perhatian') {
-    nextSteps.push(
-      'Jadwalkan kunjungan ke dokter atau Puskesmas untuk pemeriksaan ulang (GDP, HbA1c, atau TTGO) secara terstandar.'
-    );
-  } else if (!input.hasTestedGlucose) {
-    nextSteps.push(
-      'Pertimbangkan melakukan pemeriksaan gula darah di fasilitas kesehatan terdekat, terutama bila Anda memiliki faktor risiko keluarga atau IMT berlebih.'
-    );
+  if (measurement.statusLevel === 'tinggi') {
+    nextSteps.push('Cek ulang setiap bulan ke Puskesmas atau fasilitas kesehatan terdekat.');
+    nextSteps.push('Bila diberikan resep dokter, minum obat teratur sesuai anjuran dan jangan menghentikan obat sendiri.');
+    nextSteps.push('Diet seimbang: Terapkan prinsip Piring T (1/2 piring sayur/buah, 1/4 nasi, 1/4 lauk).');
+    nextSteps.push('Kurangi makanan dan minuman manis, gorengan, dan karbohidrat berlebih.');
+    nextSteps.push('Lakukan jalan cepat 30 menit 5 kali seminggu.');
+    nextSteps.push('Rawat kaki: Selalu pakai alas kaki, bersihkan dan keringkan sela jari tiap hari, serta rutin cek adanya luka/lecet.');
+    nextSteps.push('Waspada komplikasi jika tidak terkontrol: gangguan mata/kebutaan, gagal ginjal, stroke, dan luka kaki yang sulit sembuh.');
+  } else if (measurement.statusLevel === 'perhatian' || (!input.hasTestedGlucose && (input.familyHistory === 'ya' || input.sweetIntake === 'sering' || bmiCategory !== 'normal'))) {
+    nextSteps.push('1. Jaga berat badan ideal (target IMT normal 18,5 sampai <25,0).');
+    nextSteps.push('2. Kurangi makanan dan minuman manis, serta perbanyak porsi sayur dan serat.');
+    nextSteps.push('3. Olahraga 150 menit/minggu (misalnya jalan cepat atau bersepeda santai 30 menit x 5 hari).');
+    nextSteps.push('4. Tidur cukup 7–8 jam per hari dan kelola stres dengan baik.');
+    nextSteps.push('5. Cek ulang gula darah 1 bulan lagi ke Puskesmas atau fasilitas kesehatan terdekat.');
+  } else {
+    nextSteps.push('Pertahankan kondisi normal dengan rumus CERDIK: Cek kesehatan 6 bulan sekali, Enyahkan asap rokok, Rajin aktivitas fisik, Diet seimbang (Piring T), Istirahat cukup, dan Kelola stres.');
+    nextSteps.push('Tetap batasi konsumsi gula, garam, dan lemak dalam menu harian.');
+    nextSteps.push('Tetap waspada dan pantau berkala terutama bila memiliki riwayat keturunan diabetes dalam keluarga.');
   }
-
-  nextSteps.push('Terapkan prinsip makan 3J (Jadwal, Jumlah, Jenis) dan batasi konsumsi gula maksimal 4 sendok makan (50 gram) per hari.');
-  nextSteps.push('Lakukan aktivitas fisik aerobik ringan hingga sedang minimal 150 menit setiap minggu (misalnya jalan cepat 30 menit, 5 hari seminggu).');
-  nextSteps.push('Bila memiliki anggota keluarga dengan diabetes, diskusikan pola hidup sehat bersama untuk pencegahan dini.');
 
   // 5. Relevant Education Articles
   const educationIds: string[] = ['edu-dm-basics', 'edu-cerdik', 'edu-prinsip-3j', 'edu-ggl'];
