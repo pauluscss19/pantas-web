@@ -120,9 +120,9 @@ export function TrendCharts({ checkups }: TrendChartsProps) {
                 <Line
                   type="monotone"
                   dataKey="sistolik"
-                  stroke="#244B3B"
+                  stroke="#006837"
                   strokeWidth={2.5}
-                  dot={{ r: 4, fill: '#244B3B' }}
+                  dot={{ r: 4, fill: '#006837' }}
                   activeDot={{ r: 6 }}
                 />
                 <Line
@@ -220,9 +220,9 @@ export function TrendCharts({ checkups }: TrendChartsProps) {
                     <Line
                       type="monotone"
                       dataKey="nilai"
-                      stroke="#244B3B"
+                      stroke="#006837"
                       strokeWidth={2.5}
-                      dot={{ r: 4, fill: '#244B3B' }}
+                      dot={{ r: 4, fill: '#006837' }}
                       activeDot={{ r: 6 }}
                     />
                   </LineChart>

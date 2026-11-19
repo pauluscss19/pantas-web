@@ -220,14 +220,14 @@ export default function RiwayatPage() {
         </div>
       </div>
 
-      {/* Filter Tabs & Action Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-1.5 bg-white p-1 rounded-lg border border-pantas-border">
+      {/* Filter Tabs & Action Bar (Mobile Responsive) */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-1 bg-white p-1 rounded-lg border border-pantas-border overflow-x-auto w-full sm:w-auto shadow-2xs">
           <button
             onClick={() => setFilterType('semua')}
-            className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors ${
+            className={`px-3 py-2 rounded-md text-xs font-semibold whitespace-nowrap flex-1 sm:flex-none transition-colors min-h-[38px] ${
               filterType === 'semua'
-                ? 'bg-pantas-primary text-white'
+                ? 'bg-pantas-primary text-white shadow-2xs'
                 : 'text-pantas-muted hover:text-pantas-dark'
             }`}
           >
@@ -235,9 +235,9 @@ export default function RiwayatPage() {
           </button>
           <button
             onClick={() => setFilterType('diabetes')}
-            className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors ${
+            className={`px-3 py-2 rounded-md text-xs font-semibold whitespace-nowrap flex-1 sm:flex-none transition-colors min-h-[38px] ${
               filterType === 'diabetes'
-                ? 'bg-pantas-primary text-white'
+                ? 'bg-pantas-primary text-white shadow-2xs'
                 : 'text-pantas-muted hover:text-pantas-dark'
             }`}
           >
@@ -245,9 +245,9 @@ export default function RiwayatPage() {
           </button>
           <button
             onClick={() => setFilterType('hipertensi')}
-            className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors ${
+            className={`px-3 py-2 rounded-md text-xs font-semibold whitespace-nowrap flex-1 sm:flex-none transition-colors min-h-[38px] ${
               filterType === 'hipertensi'
-                ? 'bg-pantas-primary text-white'
+                ? 'bg-pantas-primary text-white shadow-2xs'
                 : 'text-pantas-muted hover:text-pantas-dark'
             }`}
           >
@@ -256,17 +256,17 @@ export default function RiwayatPage() {
         </div>
 
         {checkups.length > 0 && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-end">
             <button
               onClick={() => window.print()}
-              className="px-3 py-1.5 border border-pantas-border bg-white rounded text-xs font-medium text-pantas-dark hover:bg-neutral-100 flex items-center gap-1.5 transition-colors"
+              className="px-3.5 py-2 border border-pantas-border bg-white rounded-lg text-xs font-semibold text-pantas-dark hover:bg-neutral-50 flex items-center gap-1.5 transition-colors min-h-[38px]"
             >
               <Printer className="w-3.5 h-3.5 text-pantas-muted" />
               <span>Cetak Ringkasan</span>
             </button>
             <button
               onClick={() => setConfirmClearOpen(true)}
-              className="px-3 py-1.5 border border-pantas-red-border text-pantas-red bg-white rounded text-xs font-medium hover:bg-pantas-red-bg flex items-center gap-1.5 transition-colors"
+              className="px-3.5 py-2 border border-pantas-red-border text-pantas-red bg-white rounded-lg text-xs font-semibold hover:bg-pantas-red-bg flex items-center gap-1.5 transition-colors min-h-[38px]"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Hapus Semua</span>

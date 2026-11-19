@@ -266,22 +266,22 @@ export function CheckupWizard({ initialType }: CheckupWizardProps) {
 
   return (
     <div className="space-y-6">
-      {/* Type Switcher Banner (if user wants to toggle between Diabetes and Hipertensi) */}
-      <div className="bg-white p-3 border border-pantas-border rounded-lg flex items-center justify-between flex-wrap gap-2">
-        <span className="text-xs font-semibold text-pantas-muted uppercase tracking-wider">
+      {/* Type Switcher Banner (Mobile Responsive) */}
+      <div className="bg-white p-3.5 border border-pantas-border rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-xs">
+        <span className="text-xs font-bold text-pantas-muted uppercase tracking-wider">
           Jenis Pemeriksaan Aktif:
         </span>
-        <div className="flex items-center gap-1.5">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:items-center">
           <button
             type="button"
             onClick={() => {
               setCheckupType('diabetes');
               setCurrentStep(1);
             }}
-            className={`px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+            className={`px-3 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all min-h-[40px] ${
               checkupType === 'diabetes'
-                ? 'bg-pantas-primary text-white'
-                : 'text-pantas-muted hover:text-pantas-dark bg-pantas-soft/50'
+                ? 'bg-pantas-primary text-white shadow-2xs'
+                : 'text-pantas-muted hover:text-pantas-dark bg-pantas-soft/60'
             }`}
           >
             <Droplet className="w-3.5 h-3.5" />
@@ -293,20 +293,20 @@ export function CheckupWizard({ initialType }: CheckupWizardProps) {
               setCheckupType('hipertensi');
               setCurrentStep(1);
             }}
-            className={`px-3 py-1.5 rounded text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+            className={`px-3 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all min-h-[40px] ${
               checkupType === 'hipertensi'
-                ? 'bg-pantas-primary text-white'
-                : 'text-pantas-muted hover:text-pantas-dark bg-pantas-soft/50'
+                ? 'bg-pantas-primary text-white shadow-2xs'
+                : 'text-pantas-muted hover:text-pantas-dark bg-pantas-soft/60'
             }`}
           >
             <Heart className="w-3.5 h-3.5" />
-            <span>Hipertensi (Tekanan Darah)</span>
+            <span>Hipertensi</span>
           </button>
         </div>
       </div>
 
       {/* Progress Steps Header */}
-      <div className="bg-white p-5 border border-pantas-border rounded-lg shadow-sm space-y-3">
+      <div className="bg-white p-4 sm:p-5 border border-pantas-border rounded-xl shadow-xs space-y-3">
         <div className="flex items-center justify-between text-xs font-medium text-pantas-muted">
           <span>Langkah {currentStep} dari {TOTAL_STEPS}: <strong>{STEP_TITLES[currentStep - 1]}</strong></span>
           <span>{Math.round((currentStep / TOTAL_STEPS) * 100)}% Selesai</span>
@@ -1195,13 +1195,13 @@ export function CheckupWizard({ initialType }: CheckupWizardProps) {
         </section>
       )}
 
-      {/* Navigation Buttons: Back and Next */}
-      <div className="flex items-center justify-between pt-2">
+      {/* Navigation Buttons: Back and Next (Mobile Touch-Friendly) */}
+      <div className="flex items-center justify-between gap-3 pt-3">
         {currentStep > 1 ? (
           <button
             type="button"
             onClick={handleBack}
-            className="flex items-center gap-1.5 px-4 py-2.5 border border-pantas-border rounded font-medium text-sm text-pantas-dark hover:bg-neutral-100 transition-colors"
+            className="flex items-center justify-center gap-1.5 px-4 py-2.5 border border-pantas-border rounded-lg font-semibold text-xs sm:text-sm text-pantas-dark hover:bg-neutral-50 transition-colors min-h-[44px]"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Kembali</span>
@@ -1213,7 +1213,7 @@ export function CheckupWizard({ initialType }: CheckupWizardProps) {
         <button
           type="button"
           onClick={handleNext}
-          className="flex items-center gap-2 px-6 py-2.5 bg-pantas-primary text-white rounded font-medium text-sm hover:bg-pantas-primary-hover shadow-sm transition-colors ml-auto"
+          className="flex items-center justify-center gap-2 px-6 py-2.5 bg-pantas-primary text-white rounded-lg font-semibold text-xs sm:text-sm hover:bg-pantas-primary-hover shadow-xs transition-colors ml-auto min-h-[44px]"
         >
           <span>{currentStep === TOTAL_STEPS ? 'Lihat Hasil Pemeriksaan' : 'Lanjut'}</span>
           <ArrowRight className="w-4 h-4" />

@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --background: #F7F8F3;
-  --foreground: #202923;
-  --primary: #244B3B;
-  --soft-green: #E7EEE7;
-  --border-subtle: #D3DDD3;
+  --background: #F8FAF7;
+  --foreground: #14261B;
+  --primary: #006837;
+  --soft-green: #E8F5E9;
+  --border-subtle: #CFE3D6;
 }
 
 body {
@@ -17,17 +17,23 @@ body {
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Accessible focus outline */
 *:focus-visible {
-  outline: 2px solid #244B3B;
+  outline: 2px solid #006837;
   outline-offset: 2px;
 }
 
-/* Touch friendly minimums */
+/* Touch friendly minimums for mobile */
 button, input, select, textarea, a {
   touch-action: manipulation;
+}
+
+/* Mobile responsive safe-area padding */
+.safe-area-bottom {
+  padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
 }
 
 /* Print Stylesheet for clean summary print */

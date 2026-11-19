@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import {
   Home,
@@ -11,8 +12,8 @@ import {
   User as UserIcon,
   LogOut,
   Cloud,
-  HardDrive,
   ShieldCheck,
+  Lock,
 } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { AuthModal } from '../auth/AuthModal';
@@ -42,26 +43,54 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen bg-pantas-bg text-pantas-dark flex flex-col md:flex-row">
+    <div className="min-h-screen bg-pantas-bg text-pantas-dark flex flex-col md:flex-row antialiased">
       {/* DESKTOP: Slim Side Navigation */}
-      <aside className="hidden md:flex md:w-64 flex-col justify-between border-r border-pantas-border bg-white p-5 shrink-0 min-h-screen sticky top-0">
+      <aside className="hidden md:flex md:w-64 flex-col justify-between border-r border-pantas-border bg-white p-5 shrink-0 min-h-screen sticky top-0 shadow-xs">
         <div>
-          {/* Brand */}
-          <Link href="/" className="block mb-8 group">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded bg-pantas-primary flex items-center justify-center text-white font-bold text-lg tracking-wider">
-                P
+          {/* Brand with Puskesmas Logos */}
+          <Link href="/" className="block mb-6 group">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5 shrink-0">
+                <div className="relative w-9 h-10">
+                  <Image
+                    src="/images/logo-puskesmas.jpg"
+                    alt="Logo Puskesmas"
+                    fill
+                    sizes="36px"
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+                <div className="relative w-9 h-9 rounded-full overflow-hidden border border-purple-200 shadow-xs">
+                  <Image
+                    src="/images/logo-karangawen.jpg"
+                    alt="Logo Puskesmas Karangawen I"
+                    fill
+                    sizes="36px"
+                    className="object-cover"
+                    priority
+                  />
+                </div>
               </div>
-              <div>
-                <span className="font-bold text-lg tracking-tight text-pantas-primary block leading-none">
+              <div className="min-w-0">
+                <span className="font-bold text-lg tracking-tight text-pantas-primary block leading-none group-hover:text-pantas-primary-hover transition-colors">
                   PANTAS
                 </span>
-                <span className="text-xs text-pantas-muted block mt-1">
-                  Hipertensi & Diabetes
+                <span className="text-xs font-semibold text-pantas-dark block mt-1 truncate">
+                  Puskesmas Karangawen I
+                </span>
+                <span className="text-[10px] text-pantas-muted block truncate">
+                  Kabupaten Demak
                 </span>
               </div>
             </div>
           </Link>
+
+          {/* Subtitle badge */}
+          <div className="mb-5 px-3 py-1.5 bg-pantas-soft rounded text-[11px] font-medium text-pantas-primary flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-pantas-primary animate-pulse" />
+            <span>Skrining Hipertensi & Diabetes</span>
+          </div>
 
           {/* Navigation Links */}
           <nav className="space-y-1.5" aria-label="Navigasi Utama Desktop">
@@ -72,13 +101,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
                     active
-                      ? 'bg-pantas-soft text-pantas-primary font-semibold'
-                      : 'text-pantas-muted hover:text-pantas-dark hover:bg-neutral-100'
+                      ? 'bg-pantas-soft text-pantas-primary font-semibold shadow-2xs'
+                      : 'text-pantas-muted hover:text-pantas-dark hover:bg-neutral-50'
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${active ? 'text-pantas-primary' : 'text-pantas-muted'}`} />
+                  <Icon className={`w-5 h-5 ${active ? 'text-pantas-primary stroke-[2.3]' : 'text-pantas-muted'}`} />
                   <span>{item.name}</span>
                 </Link>
               );
@@ -92,14 +121,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <div className="space-y-2.5">
               <div className="flex items-center gap-2 px-1">
                 <Cloud className="w-4 h-4 text-pantas-primary shrink-0" />
-                <div className="overflow-hidden">
+                <div className="overflow-hidden min-w-0">
                   <p className="text-xs font-semibold text-pantas-primary truncate">Akun Cloud Aktif</p>
                   <p className="text-xs text-pantas-muted truncate">{user.email}</p>
                 </div>
               </div>
               <button
                 onClick={() => signOut()}
-                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-pantas-border rounded text-xs font-medium text-pantas-muted hover:text-pantas-red hover:border-pantas-red-border hover:bg-pantas-red-bg transition-colors"
+                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-pantas-border rounded-lg text-xs font-medium text-pantas-muted hover:text-pantas-red hover:border-pantas-red-border hover:bg-pantas-red-bg transition-colors"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Keluar Akun</span>
@@ -108,10 +137,10 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           ) : (
             <div className="space-y-2.5">
               <div className="flex items-center gap-2 px-1">
-                <HardDrive className="w-4 h-4 text-pantas-muted shrink-0" />
+                <Lock className="w-4 h-4 text-pantas-muted shrink-0" />
                 <div>
-                  <p className="text-xs font-semibold text-pantas-dark">Mode Tamu (Lokal)</p>
-                  <p className="text-[11px] text-pantas-muted">Disimpan di perangkat ini</p>
+                  <p className="text-xs font-semibold text-pantas-dark">Mode Tanpa Login</p>
+                  <p className="text-[11px] text-pantas-muted">Login untuk simpan riwayat</p>
                 </div>
               </div>
               <button
@@ -119,44 +148,67 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   setAuthMode('signin');
                   setAuthModalOpen(true);
                 }}
-                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-pantas-primary text-white rounded text-xs font-medium hover:bg-pantas-primary-hover transition-colors"
+                className="w-full flex items-center justify-center gap-1.5 py-2 px-3 bg-pantas-primary text-white rounded-lg text-xs font-medium hover:bg-pantas-primary-hover transition-colors shadow-2xs"
               >
                 <UserIcon className="w-3.5 h-3.5" />
-                <span>Masuk / Sinkron Cloud</span>
+                <span>Masuk / Buat Akun</span>
               </button>
             </div>
           )}
 
           <div className="mt-4 pt-3 border-t border-pantas-border/60 flex items-center gap-1 text-[11px] text-pantas-muted">
             <ShieldCheck className="w-3.5 h-3.5 text-pantas-primary shrink-0" />
-            <span>Privasi terjaga, tanpa pelacak</span>
+            <span>Terlindungi Row Level Security</span>
           </div>
         </div>
       </aside>
 
       {/* MAIN CONTENT AREA */}
-      <div className="flex-1 flex flex-col min-w-0 pb-20 md:pb-8">
-        {/* Mobile Top Header */}
-        <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white border-b border-pantas-border sticky top-0 z-30">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded bg-pantas-primary flex items-center justify-center text-white font-bold text-sm">
-              P
+      <div className="flex-1 flex flex-col min-w-0 pb-24 md:pb-8">
+        {/* Mobile Top Header (Optimized for small screens) */}
+        <header className="md:hidden flex items-center justify-between px-3.5 py-2.5 bg-white border-b border-pantas-border sticky top-0 z-30 shadow-2xs">
+          <Link href="/" className="flex items-center gap-2 min-w-0">
+            <div className="flex items-center gap-1 shrink-0">
+              <div className="relative w-7 h-8">
+                <Image
+                  src="/images/logo-puskesmas.jpg"
+                  alt="Logo Puskesmas"
+                  fill
+                  sizes="28px"
+                  className="object-contain"
+                  priority
+                />
+              </div>
+              <div className="relative w-7 h-7 rounded-full overflow-hidden border border-purple-200">
+                <Image
+                  src="/images/logo-karangawen.jpg"
+                  alt="Logo Puskesmas Karangawen I"
+                  fill
+                  sizes="28px"
+                  className="object-cover"
+                  priority
+                />
+              </div>
             </div>
-            <div>
-              <span className="font-bold text-base tracking-tight text-pantas-primary">PANTAS</span>
-              <span className="text-[10px] text-pantas-muted block -mt-0.5">Pemantauan Hipertensi & Diabetes</span>
+            <div className="min-w-0">
+              <span className="font-bold text-sm tracking-tight text-pantas-primary block leading-none">
+                PANTAS
+              </span>
+              <span className="text-[10px] text-pantas-muted block truncate mt-0.5">
+                Puskesmas Karangawen I
+              </span>
             </div>
           </Link>
 
-          <div>
+          <div className="shrink-0 ml-2">
             {user ? (
               <button
                 onClick={() => signOut()}
-                className="p-1.5 text-xs text-pantas-muted border border-pantas-border rounded flex items-center gap-1"
+                className="px-2 py-1 text-xs text-pantas-muted border border-pantas-border rounded flex items-center gap-1 hover:bg-neutral-50"
                 title="Keluar"
               >
                 <LogOut className="w-3.5 h-3.5" />
-                <span className="sr-only">Keluar</span>
+                <span className="text-[11px]">Keluar</span>
               </button>
             ) : (
               <button
@@ -164,7 +216,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                   setAuthMode('signin');
                   setAuthModalOpen(true);
                 }}
-                className="px-2.5 py-1 text-xs font-medium bg-pantas-primary text-white rounded"
+                className="px-2.5 py-1 text-xs font-semibold bg-pantas-primary text-white rounded hover:bg-pantas-primary-hover shadow-2xs"
               >
                 Masuk
               </button>
@@ -178,9 +230,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </main>
       </div>
 
-      {/* MOBILE: Bottom Navigation (4 items) */}
+      {/* MOBILE: Bottom Navigation (Touch-friendly & Safe-area padded) */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-pantas-border flex items-center justify-around py-2 px-1 safe-area-bottom"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xs border-t border-pantas-border flex items-center justify-around py-1 px-1 safe-area-bottom shadow-lg"
         aria-label="Navigasi Utama Ponsel"
       >
         {NAV_ITEMS.map((item) => {
@@ -190,11 +242,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center py-1 px-3 rounded text-center transition-colors ${
-                active ? 'text-pantas-primary font-semibold' : 'text-pantas-muted'
+              className={`flex flex-col items-center justify-center py-1.5 px-2 rounded-lg text-center transition-all min-w-[64px] min-h-[48px] ${
+                active
+                  ? 'text-pantas-primary font-bold bg-pantas-soft/60'
+                  : 'text-pantas-muted hover:text-pantas-dark'
               }`}
             >
-              <Icon className={`w-5 h-5 ${active ? 'text-pantas-primary' : 'text-pantas-muted'}`} />
+              <Icon className={`w-5 h-5 ${active ? 'text-pantas-primary stroke-[2.3]' : 'text-pantas-muted'}`} />
               <span className="text-[11px] mt-1 leading-none">{item.name}</span>
             </Link>
           );
@@ -210,4 +264,3 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
-
