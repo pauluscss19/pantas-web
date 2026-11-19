@@ -83,7 +83,7 @@ export default function HomePage() {
           <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-purple-200 shadow-xs">
             <Image
               src="/images/logo-karangawen.jpg"
-              alt="Maskot Kami SIAP Puskesmas Karangawen I"
+              alt="Logo Puskesmas Karangawen I"
               fill
               sizes="48px"
               className="object-cover"
@@ -92,16 +92,13 @@ export default function HomePage() {
           </div>
         </div>
         <div className="text-center sm:text-left flex-1 min-w-0">
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-            <span className="text-xs font-bold text-pantas-primary uppercase tracking-wider">
+          <div className="flex items-center justify-center sm:justify-start">
+            <span className="text-sm font-bold text-pantas-primary uppercase tracking-wider">
               Puskesmas Karangawen I
             </span>
-            <span className="text-[11px] font-semibold text-purple-800 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-200">
-              Motto: Kami SIAP
-            </span>
           </div>
-          <p className="text-xs sm:text-sm text-pantas-muted mt-0.5 leading-relaxed">
-            Inovasi Layanan Skrining Kesehatan Mandiri untuk Masyarakat Karangawen dan Sekitarnya — Deteksi Dini Gula Darah & Tekanan Darah.
+          <p className="text-xs sm:text-sm text-pantas-muted mt-1 leading-relaxed">
+            Layanan Skrining Kesehatan Mandiri untuk Masyarakat Karangawen dan Sekitarnya — Deteksi Dini Gula Darah &amp; Tekanan Darah.
           </p>
         </div>
       </section>
