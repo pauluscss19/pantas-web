@@ -21,6 +21,7 @@ import { useAuth } from '../auth/AuthContext';
 import { saveRemoteCheckup } from '@/lib/supabase/repository';
 import { EDUCATION_ARTICLES } from '@/lib/education/content';
 import { AuthModal } from '../auth/AuthModal';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 
 interface ResultViewProps {
   result: EvaluationResult;
@@ -35,22 +36,17 @@ export function ResultView({ result, onReset, isSavedInitial = false }: ResultVi
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
   const [saveErrorMsg, setSaveErrorMsg] = useState<string | null>(null);
   const [authModalOpen, setAuthModalOpen] = useState<boolean>(false);
+  const [confirmSaveOpen, setConfirmSaveOpen] = useState<boolean>(false);
+  const [confirmResetOpen, setConfirmResetOpen] = useState<boolean>(false);
 
-  const handleSave = async () => {
+  const executeSave = async () => {
     setIsSaving(true);
     setSaveErrorMsg(null);
     setSaveSuccessMsg(null);
 
-    // Fitur riwayat hanya bisa diakses saat sudah login
-    if (!user) {
-      setAuthModalOpen(true);
-      setIsSaving(false);
-      return;
-    }
-
     try {
       if (isConfigured) {
-        await saveRemoteCheckup(result, user.id);
+        await saveRemoteCheckup(result, user!.id);
         await saveLocalCheckup(result);
         setIsSaved(true);
         setSaveSuccessMsg('Hasil berhasil disimpan ke riwayat akun cloud Anda.');
@@ -71,6 +67,14 @@ export function ResultView({ result, onReset, isSavedInitial = false }: ResultVi
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleSaveClick = () => {
+    if (!user) {
+      setAuthModalOpen(true);
+      return;
+    }
+    setConfirmSaveOpen(true);
   };
 
   const handlePrint = () => {
@@ -368,20 +372,20 @@ export function ResultView({ result, onReset, isSavedInitial = false }: ResultVi
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
           {user ? (
             <button
-              onClick={() => handleSave()}
+              onClick={handleSaveClick}
               disabled={isSaving || isSaved}
               className={`action-btn flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-xs sm:text-sm transition-colors min-h-[44px] ${
                 isSaved
                   ? 'bg-pantas-soft text-pantas-primary border border-pantas-primary cursor-default'
-                  : 'bg-pantas-primary text-white hover:bg-pantas-primary-hover shadow-xs'
+                  : 'bg-pantas-primary text-white hover:bg-pantas-primary-hover shadow-xs disabled:opacity-50'
               }`}
             >
               {isSaved ? <Check className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
-              <span>{isSaved ? 'Tersimpan di Riwayat Akun' : 'Simpan Hasil ke Riwayat Akun'}</span>
+              <span>{isSaved ? 'Tersimpan di Riwayat Akun' : isSaving ? 'Menyimpan...' : 'Simpan Hasil ke Riwayat Akun'}</span>
             </button>
           ) : (
             <button
-              onClick={() => handleSave()}
+              onClick={handleSaveClick}
               className="action-btn flex items-center justify-center gap-2 px-4 py-2.5 bg-pantas-primary text-white rounded-lg font-semibold text-xs sm:text-sm hover:bg-pantas-primary-hover shadow-xs transition-colors min-h-[44px]"
             >
               <LogIn className="w-4 h-4" />
@@ -398,9 +402,9 @@ export function ResultView({ result, onReset, isSavedInitial = false }: ResultVi
             <span>Cetak / Unduh Ringkasan</span>
           </button>
 
-          {/* Mulai Pemeriksaan Baru */}
+          {/* Mulai Pemeriksaan Baru dengan Konfirmasi */}
           <button
-            onClick={onReset}
+            onClick={() => setConfirmResetOpen(true)}
             className="action-btn flex items-center justify-center gap-2 px-4 py-2.5 border border-pantas-border rounded-lg font-semibold text-xs sm:text-sm text-pantas-muted hover:text-pantas-dark hover:bg-neutral-50 transition-colors sm:ml-auto min-h-[44px]"
           >
             <RotateCcw className="w-4 h-4" />
@@ -413,7 +417,33 @@ export function ResultView({ result, onReset, isSavedInitial = false }: ResultVi
       <AuthModal
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
-        onSuccess={() => handleSave()}
+        onSuccess={() => setConfirmSaveOpen(true)}
+      />
+
+      {/* Modal Konfirmasi Simpan Hasil (Mencegah Dobel Klik) */}
+      <ConfirmModal
+        isOpen={confirmSaveOpen}
+        onClose={() => setConfirmSaveOpen(false)}
+        onConfirm={executeSave}
+        title="Konfirmasi Simpan Hasil"
+        message="Apakah Anda yakin ingin menyimpan hasil pemeriksaan mandiri ini ke riwayat akun Anda?"
+        confirmText="Ya, Simpan Hasil"
+        cancelText="Batal"
+        variant="primary"
+        icon={<Bookmark className="w-5 h-5 text-pantas-primary" />}
+      />
+
+      {/* Modal Konfirmasi Mulai Pemeriksaan Baru (Mencegah Kehilangan Data) */}
+      <ConfirmModal
+        isOpen={confirmResetOpen}
+        onClose={() => setConfirmResetOpen(false)}
+        onConfirm={() => onReset()}
+        title="Mulai Pemeriksaan Baru?"
+        message="Pemeriksaan saat ini akan ditutup. Pastikan Anda sudah menyimpan hasil ke riwayat atau mencetak ringkasan jika diperlukan."
+        confirmText="Ya, Mulai Baru"
+        cancelText="Batal"
+        variant="warning"
+        icon={<RotateCcw className="w-5 h-5 text-amber-600" />}
       />
     </div>
   );

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
-import { X, Lock, Mail, AlertCircle, CheckCircle2, Cloud } from 'lucide-react';
+import { X, Lock, Mail, AlertCircle, CheckCircle2, Cloud, Loader2 } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -24,6 +24,7 @@ export function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'signin' }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return; // Prevent double click
     setErrorMsg(null);
     setSuccessMsg(null);
 
@@ -176,13 +177,18 @@ export function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'signin' }
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-2.5 px-4 bg-pantas-primary text-white font-medium rounded hover:bg-pantas-primary-hover disabled:opacity-50 text-sm transition-colors"
+                  className="w-full py-2.5 px-4 bg-pantas-primary text-white font-medium rounded hover:bg-pantas-primary-hover disabled:opacity-50 text-sm transition-colors flex items-center justify-center gap-2"
                 >
-                  {isSubmitting
-                    ? 'Memproses...'
-                    : mode === 'signin'
-                    ? 'Masuk ke Akun'
-                    : 'Daftar Sekarang'}
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                      <span>Memproses...</span>
+                    </>
+                  ) : mode === 'signin' ? (
+                    'Masuk ke Akun'
+                  ) : (
+                    'Daftar Sekarang'
+                  )}
                 </button>
               </form>
 

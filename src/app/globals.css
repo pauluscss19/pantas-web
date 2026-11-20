@@ -36,6 +36,22 @@ button, input, select, textarea, a {
   padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
 }
 
+/* Page transition animation */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: pageFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* Print Stylesheet for clean summary print */
 @media print {
   nav, .no-print, header, footer, button.action-btn {

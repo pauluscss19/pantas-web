@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { AuthModal } from '../auth/AuthModal';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { PageProgressBar } from './PageProgressBar';
 import { isAdminUser } from '@/lib/auth/admin';
 
 interface NavItem {
@@ -38,6 +40,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, signOut } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+  const [confirmSignOutOpen, setConfirmSignOutOpen] = useState(false);
 
   const isAdmin = useMemo(() => {
     return isAdminUser(user?.email, user?.user_metadata);
@@ -59,7 +62,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen bg-pantas-bg text-pantas-dark flex flex-col md:flex-row antialiased">
+    <div className="min-h-screen bg-pantas-bg text-pantas-dark flex flex-col md:flex-row antialiased relative">
+      {/* Top Page Navigation Progress Bar */}
+      <Suspense fallback={null}>
+        <PageProgressBar />
+      </Suspense>
+
       {/* DESKTOP: Slim Side Navigation */}
       <aside className="hidden md:flex md:w-64 flex-col justify-between border-r border-pantas-border bg-white p-5 shrink-0 min-h-screen sticky top-0 shadow-xs">
         <div>
@@ -166,7 +174,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 </div>
               </div>
               <button
-                onClick={() => signOut()}
+                onClick={() => setConfirmSignOutOpen(true)}
                 className="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-pantas-border rounded-lg text-xs font-medium text-pantas-muted hover:text-pantas-red hover:border-pantas-red-border hover:bg-pantas-red-bg transition-colors"
               >
                 <LogOut className="w-3.5 h-3.5" />
@@ -253,7 +261,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
             {user ? (
               <button
-                onClick={() => signOut()}
+                onClick={() => setConfirmSignOutOpen(true)}
                 className="px-2 py-1 text-xs text-pantas-muted border border-pantas-border rounded flex items-center gap-1 hover:bg-neutral-50"
                 title="Keluar"
               >
@@ -274,8 +282,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        {/* Page Content */}
-        <main className="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 md:p-8">
+        {/* Page Content with smooth fade-in */}
+        <main
+          key={pathname}
+          className="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 md:p-8 page-enter"
+        >
           {children}
         </main>
       </div>
@@ -326,6 +337,19 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         isOpen={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         initialMode={authMode}
+      />
+
+      {/* Konfirmasi Keluar Akun (Mencegah Klik Tidak Sengaja) */}
+      <ConfirmModal
+        isOpen={confirmSignOutOpen}
+        onClose={() => setConfirmSignOutOpen(false)}
+        onConfirm={() => signOut()}
+        title="Konfirmasi Keluar Akun"
+        message="Apakah Anda yakin ingin keluar dari akun PANTAS pada perangkat ini?"
+        confirmText="Ya, Keluar"
+        cancelText="Batal"
+        variant="danger"
+        icon={<LogOut className="w-5 h-5 text-pantas-red" />}
       />
     </div>
   );

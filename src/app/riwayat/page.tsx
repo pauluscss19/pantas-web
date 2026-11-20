@@ -27,6 +27,7 @@ import {
 } from '@/lib/supabase/repository';
 import { TrendCharts } from '@/components/history/TrendCharts';
 import { AuthModal } from '@/components/auth/AuthModal';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 
 export default function RiwayatPage() {
   const { user, loading: authLoading, isConfigured } = useAuth();
@@ -406,60 +407,33 @@ export default function RiwayatPage() {
         )}
       </section>
 
-      {/* Modal Konfirmasi Hapus Satu Rekaman */}
-      {deleteTargetId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white p-6 rounded-lg max-w-sm w-full border border-pantas-border space-y-4">
-            <h3 className="text-base font-bold text-pantas-dark">Konfirmasi Hapus</h3>
-            <p className="text-xs text-pantas-muted leading-relaxed">
-              Apakah Anda yakin ingin menghapus data pemeriksaan ini dari akun Anda? Tindakan ini tidak dapat dibatalkan.
-            </p>
-            <div className="flex justify-end gap-2 pt-2">
-              <button
-                onClick={() => setDeleteTargetId(null)}
-                className="px-3 py-1.5 border border-pantas-border rounded text-xs font-medium text-pantas-muted hover:bg-neutral-100"
-              >
-                Batal
-              </button>
-              <button
-                onClick={() => handleDeleteOne(deleteTargetId)}
-                className="px-3 py-1.5 bg-pantas-red text-white rounded text-xs font-medium hover:bg-red-700"
-              >
-                Ya, Hapus
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal Konfirmasi Hapus Satu Rekaman (Mencegah Dobel Klik) */}
+      <ConfirmModal
+        isOpen={Boolean(deleteTargetId)}
+        onClose={() => setDeleteTargetId(null)}
+        onConfirm={async () => {
+          if (deleteTargetId) await handleDeleteOne(deleteTargetId);
+        }}
+        title="Konfirmasi Hapus Pemeriksaan"
+        message="Apakah Anda yakin ingin menghapus data pemeriksaan ini dari akun Anda? Tindakan ini tidak dapat dibatalkan."
+        confirmText="Ya, Hapus Data"
+        cancelText="Batal"
+        variant="danger"
+        icon={<Trash2 className="w-5 h-5 text-pantas-red" />}
+      />
 
-      {/* Modal Konfirmasi Hapus Seluruh Riwayat */}
-      {confirmClearOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="bg-white p-6 rounded-lg max-w-md w-full border border-pantas-border space-y-4">
-            <div className="flex items-center gap-2 text-pantas-red font-bold">
-              <AlertTriangle className="w-5 h-5" />
-              <span>Hapus Seluruh Riwayat Pemeriksaan?</span>
-            </div>
-            <p className="text-xs text-pantas-muted leading-relaxed">
-              Semua catatan pemeriksaan kesehatan yang tersimpan di akun cloud Anda akan dihapus secara permanen. Tindakan ini tidak dapat dipulihkan.
-            </p>
-            <div className="flex justify-end gap-2 pt-2">
-              <button
-                onClick={() => setConfirmClearOpen(false)}
-                className="px-4 py-2 border border-pantas-border rounded text-xs font-medium text-pantas-muted hover:bg-neutral-100"
-              >
-                Batal
-              </button>
-              <button
-                onClick={handleClearAll}
-                className="px-4 py-2 bg-pantas-red text-white rounded text-xs font-medium hover:bg-red-700"
-              >
-                Ya, Hapus Semua Riwayat
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal Konfirmasi Hapus Seluruh Riwayat (Mencegah Dobel Klik) */}
+      <ConfirmModal
+        isOpen={confirmClearOpen}
+        onClose={() => setConfirmClearOpen(false)}
+        onConfirm={handleClearAll}
+        title="Hapus Seluruh Riwayat?"
+        message="Semua catatan pemeriksaan kesehatan yang tersimpan di akun cloud Anda akan dihapus secara permanen. Tindakan ini tidak dapat dipulihkan."
+        confirmText="Ya, Hapus Semua Riwayat"
+        cancelText="Batal"
+        variant="danger"
+        icon={<AlertTriangle className="w-5 h-5 text-pantas-red" />}
+      />
     </div>
   );
 }

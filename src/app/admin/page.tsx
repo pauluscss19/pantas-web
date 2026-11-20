@@ -35,6 +35,7 @@ export default function AdminPage() {
   const [selectedCheckup, setSelectedCheckup] = useState<EvaluationResult | null>(null);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   const isAdmin = useMemo(() => {
     return isAdminUser(user?.email, user?.user_metadata);
@@ -104,60 +105,67 @@ export default function AdminPage() {
     });
   }, [checkups, filterType, filterStatus, searchQuery]);
 
-  // Export to CSV function
+  // Export to CSV function (dilengkapi anti-dobel klik)
   const handleExportCSV = () => {
-    if (filteredCheckups.length === 0) return;
+    if (isExporting || filteredCheckups.length === 0) return;
+    setIsExporting(true);
 
-    const headers = [
-      'No',
-      'ID Pemeriksaan',
-      'User ID',
-      'Tanggal',
-      'Jenis Pemeriksaan',
-      'Nilai Pengukuran',
-      'Satuan',
-      'Status Klinis',
-      'Umur',
-      'Jenis Kelamin',
-      'BB (kg)',
-      'TB (cm)',
-      'IMT (kg/m2)',
-      'Kategori IMT',
-      'Jumlah Faktor Risiko',
-    ];
+    try {
+      const headers = [
+        'No',
+        'ID Pemeriksaan',
+        'User ID',
+        'Tanggal',
+        'Jenis Pemeriksaan',
+        'Nilai Pengukuran',
+        'Satuan',
+        'Status Klinis',
+        'Umur',
+        'Jenis Kelamin',
+        'BB (kg)',
+        'TB (cm)',
+        'IMT (kg/m2)',
+        'Kategori IMT',
+        'Jumlah Faktor Risiko',
+      ];
 
-    const rows = filteredCheckups.map((c, idx) => [
-      idx + 1,
-      `"${c.id}"`,
-      `"${c.userId || '-'}"`,
-      `"${new Date(c.createdAt).toLocaleString('id-ID')}"`,
-      `"${c.checkupType === 'diabetes' ? 'Diabetes Melitus' : 'Hipertensi'}"`,
-      `"${c.measurement.primaryValue}"`,
-      `"${c.measurement.unit}"`,
-      `"${c.measurement.statusLevel.toUpperCase()}"`,
-      c.profile.age,
-      `"${c.profile.gender}"`,
-      c.profile.weight,
-      c.profile.height,
-      `"${c.profile.bmiFormatted}"`,
-      `"${c.profile.bmiCategoryLabel}"`,
-      c.riskFactors.length,
-    ]);
+      const rows = filteredCheckups.map((c, idx) => [
+        idx + 1,
+        `"${c.id}"`,
+        `"${c.userId || '-'}"`,
+        `"${new Date(c.createdAt).toLocaleString('id-ID')}"`,
+        `"${c.checkupType === 'diabetes' ? 'Diabetes Melitus' : 'Hipertensi'}"`,
+        `"${c.measurement.primaryValue}"`,
+        `"${c.measurement.unit}"`,
+        `"${c.measurement.statusLevel.toUpperCase()}"`,
+        c.profile.age,
+        `"${c.profile.gender}"`,
+        c.profile.weight,
+        c.profile.height,
+        `"${c.profile.bmiFormatted}"`,
+        `"${c.profile.bmiCategoryLabel}"`,
+        c.riskFactors.length,
+      ]);
 
-    const csvContent =
-      'data:text/csv;charset=utf-8,\uFEFF' +
-      [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
+      const csvContent =
+        'data:text/csv;charset=utf-8,\uFEFF' +
+        [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
 
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute(
-      'download',
-      `pantas-rekap-pasien-${new Date().toISOString().split('T')[0]}.csv`
-    );
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute(
+        'download',
+        `pantas-rekap-pasien-${new Date().toISOString().split('T')[0]}.csv`
+      );
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } finally {
+      setTimeout(() => {
+        setIsExporting(false);
+      }, 600);
+    }
   };
 
   const formatDate = (isoString: string) => {
@@ -387,11 +395,11 @@ export default function AdminPage() {
 
             <button
               onClick={handleExportCSV}
-              disabled={filteredCheckups.length === 0}
+              disabled={isExporting || filteredCheckups.length === 0}
               className="px-3.5 py-2 bg-pantas-primary text-white rounded-lg text-xs font-semibold hover:bg-pantas-primary-hover flex items-center gap-1.5 transition-colors disabled:opacity-50 shadow-2xs"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>Unduh CSV</span>
+              <Download className={`w-3.5 h-3.5 ${isExporting ? 'animate-bounce' : ''}`} />
+              <span>{isExporting ? 'Mengekspor...' : 'Unduh CSV'}</span>
             </button>
           </div>
         </div>

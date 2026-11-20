@@ -22,6 +22,7 @@ import { calculateBMI, parseIndonesianNumber } from '@/lib/rules/bmi';
 import { evaluateDiabetes } from '@/lib/rules/diabetes';
 import { evaluateHipertensi } from '@/lib/rules/hypertension';
 import { ResultView } from './ResultView';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
 
 interface CheckupWizardProps {
   initialType?: CheckupType;
@@ -40,6 +41,8 @@ export function CheckupWizard({ initialType }: CheckupWizardProps) {
   const [checkupType, setCheckupType] = useState<CheckupType>(initialType || 'diabetes');
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [result, setResult] = useState<EvaluationResult | null>(null);
+  const [confirmSubmitOpen, setConfirmSubmitOpen] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   // Common Profile State (using strings for inputs to allow comma typing)
   const [ageStr, setAgeStr] = useState<string>('');
@@ -193,7 +196,7 @@ export function CheckupWizard({ initialType }: CheckupWizardProps) {
         setCurrentStep((prev) => prev + 1);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        handleSubmitEvaluation();
+        setConfirmSubmitOpen(true);
       }
     }
   };
@@ -1213,12 +1216,31 @@ export function CheckupWizard({ initialType }: CheckupWizardProps) {
         <button
           type="button"
           onClick={handleNext}
-          className="flex items-center justify-center gap-2 px-6 py-2.5 bg-pantas-primary text-white rounded-lg font-semibold text-xs sm:text-sm hover:bg-pantas-primary-hover shadow-xs transition-colors ml-auto min-h-[44px]"
+          disabled={isSubmitting}
+          className="flex items-center justify-center gap-2 px-6 py-2.5 bg-pantas-primary text-white rounded-lg font-semibold text-xs sm:text-sm hover:bg-pantas-primary-hover shadow-xs transition-colors ml-auto min-h-[44px] disabled:opacity-50"
         >
-          <span>{currentStep === TOTAL_STEPS ? 'Lihat Hasil Pemeriksaan' : 'Lanjut'}</span>
+          <span>{currentStep === TOTAL_STEPS ? (isSubmitting ? 'Menganalisis...' : 'Lihat Hasil Pemeriksaan') : 'Lanjut'}</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>
+
+      {/* Modal Konfirmasi Selesai Pengisian (Mencegah Dobel Klik) */}
+      <ConfirmModal
+        isOpen={confirmSubmitOpen}
+        onClose={() => setConfirmSubmitOpen(false)}
+        onConfirm={async () => {
+          setIsSubmitting(true);
+          // Sedikit jeda singkat agar transisi terasa smooth
+          await new Promise((resolve) => setTimeout(resolve, 200));
+          handleSubmitEvaluation();
+          setIsSubmitting(false);
+        }}
+        title="Konfirmasi Selesai Pengisian"
+        message="Apakah data diri dan informasi pengukuran yang Anda masukkan sudah sesuai? Sistem PANTAS akan segera memproses analisis klinis Anda."
+        confirmText="Ya, Tampilkan Hasil"
+        cancelText="Periksa Lagi"
+        variant="primary"
+      />
     </div>
   );
 }
