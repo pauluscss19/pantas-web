@@ -118,6 +118,26 @@ export async function getRemoteCheckups(userId: string): Promise<EvaluationResul
   return (data || []).map((row) => mapRowToResult(row as SupabaseCheckupRow));
 }
 
+/**
+ * Fetch all patient checkups across all users (restricted to Admin by RLS policy)
+ */
+export async function getAllCheckupsAdmin(): Promise<EvaluationResult[]> {
+  const supabase = createClient();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from('checkups')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Failed to fetch admin all checkups:', error.message);
+    throw new Error(error.message);
+  }
+
+  return (data || []).map((row) => mapRowToResult(row as SupabaseCheckupRow));
+}
+
 export async function deleteRemoteCheckup(id: string, userId: string): Promise<boolean> {
   const supabase = createClient();
   if (!supabase) return false;

@@ -95,7 +95,7 @@ export const EDUCATION_ARTICLES: EducationArticle[] = [
       },
       {
         institution: 'Kemenkes RI - Direktorat P2PTM',
-        documentTitle: 'Panduan Praktis Pengendalian Hipertensi',
+        documentTitle: 'Panduan Praktik Pengendalian Hipertensi',
         reviewDate: 'Ditinjau: Agustus 2024',
       },
     ],
@@ -133,44 +133,92 @@ export const EDUCATION_ARTICLES: EducationArticle[] = [
   },
   {
     id: 'edu-prinsip-3j',
-    title: 'Prinsip Makan 3J: Kunci Pengendalian Gula Darah bagi Masyarakat',
+    title: 'Prinsip Makan 3J & Panduan Menu Sehari untuk Gula Darah Stabil',
     category: 'diabetes',
-    readTimeMinutes: 4,
+    readTimeMinutes: 5,
     summary:
-      'Mengatur makan untuk penderita dan pencegah diabetes tidak berarti harus kelaparan. Kuncinya ada pada Jadwal, Jumlah, dan Jenis bahan makanan.',
+      'Mengatur makan tidak berarti kelaparan. Kuncinya ada pada Jumlah, Jenis, dan Jadwal (3J) serta contoh menu harian lengkap dengan prinsip Piring T.',
     sections: [
       {
-        heading: '1. Jadwal Makan yang Teratur',
+        heading: '1. J - Jumlah (Porsi Tidak Berlebihan)',
         content: [
-          'Penting menjaga ritme makan dengan 3 kali makan utama (sarapan, makan siang, makan malam) dan 2–3 kali selingan buah sehat.',
-          'Jadwal yang konsisten membantu mencegah fluktuasi tajam gula darah serta mencegah rasa lapar berlebih yang memicu makan berlebihan.',
+          'Gunakan panduan "Isi Piringku / Piring T" dari Kemenkes RI:',
+          '• Setengah piring (50%): Diisi dengan aneka sayur dan buah segar.',
+          '• Seperempat piring (25%): Diisi makanan pokok sumber karbohidrat (nasi merah, ubi, jagung, singkong rebus).',
+          '• Seperempat piring (25%): Diisi lauk pauk sumber protein (ikan kukus/bakar, ayam tanpa kulit, tahu, tempe).',
         ],
       },
       {
-        heading: '2. Jumlah Porsi yang Sesuai (Isi Piringku)',
+        heading: '2. J - Jenis Bahan Makanan',
         content: [
-          'Gunakan panduan "Isi Piringku" dari Kemenkes RI:',
-          'Setengah piring (50%) diisi dengan aneka sayuran (bayam, sawi, kangkung, wortel) dan sedikit buah.',
-          'Seperempat piring (25%) diisi makanan pokok sumber karbohidrat (nasi, singkong, kentang, jagung). Utamakan porsi yang terukur.',
-          'Seperempat piring (25%) diisi lauk pauk sumber protein (ikan, tahu, tempe, telur, ayam tanpa kulit).',
-        ],
-      },
-      {
-        heading: '3. Jenis Makanan yang Dipilih',
-        content: [
-          'Pilihlah karbohidrat kompleks dengan serat tinggi agar penyerapan gula berlangsung perlahan. Batasi makanan berindeks glikemik tinggi.',
+          'Pilihlah bahan pangan yang menjaga lonjakan gula darah tetap stabil:',
         ],
         tips: [
-          'Utamakan: Nasi merah, oat, singkong rebus, tempe bacem panggang, ikan pepes, sayur bening bayam, lalapan segar.',
-          'Batasi: Kue manis, donat, es teh manis berulang, gorengan bertepung tebal, dan minuman bersoda.',
+          'PILIH: Beras merah, ubi jalar, sayuran hijau (bayam, sawi, kangkung, kacang panjang), ikan, dada ayam tanpa kulit, tahu, tempe, buah apel, pir, dan jambu air.',
+          'HINDARI: Gula pasir, sirup, kue manis, boba, soda, gorengan bertepung tebal, jeroan, dan makanan yang sangat asin.',
+        ],
+      },
+      {
+        heading: '3. J - Jadwal Makan yang Teratur',
+        content: [
+          'Terapkan jadwal makan yang teratur: 3 kali makan utama ditambah 2 kali selingan sehat (buah atau kacang sangrai). Hindari telat makan agar tidak memicu rasa lapar berlebih.',
+        ],
+      },
+      {
+        heading: 'Contoh Menu Harian Sehat PANTAS',
+        content: [
+          'Berikut rekomendasi susunan menu sehari yang mudah diolah keluarga:',
+        ],
+        tips: [
+          'Pagi: Nasi merah + telur rebus + sayur bening bayam.',
+          'Selingan Pagi (10.00): 1 buah apel kecil atau pir.',
+          'Siang: Nasi merah + ikan bakar/kukus + tahu kukus + lalapan segar.',
+          'Selingan Sore (16.00): Ubi rebus atau kacang sangrai.',
+          'Malam: Nasi merah + tumis dada ayam tanpa kulit + capcay sayur.',
+          'Kebutuhan Cairan: Minum air putih minimal 8 gelas per hari.',
         ],
       },
     ],
     sources: [
       {
-        institution: 'Kemenkes RI & PERKENI',
-        documentTitle: 'Petunjuk Teknis Diet Diabetes Melitus & Isi Piringku',
-        reviewDate: 'Ditinjau: September 2024',
+        institution: 'Puskesmas Karangawen I & Kemenkes RI',
+        documentTitle: 'Petunjuk Teknis Diet Diabetes Melitus & Prinsip 3J',
+        reviewDate: 'Ditinjau: 2024',
+      },
+    ],
+  },
+  {
+    id: 'edu-mitos-dm',
+    title: 'Mitos vs Fakta Seputar Diabetes Melitus',
+    category: 'diabetes',
+    readTimeMinutes: 4,
+    summary:
+      'Kupas tuntas berbagai mitos keliru di masyarakat mengenai konsumsi nasi, mitos obat diabetes merusak ginjal, luka kecil di kaki, dan penyebab sakit gula.',
+    sections: [
+      {
+        heading: 'Mitos vs Fakta yang Kerap Salah Dipahami',
+        content: [
+          'Banyak informasi yang kurang tepat beredar di tengah masyarakat. Berikut fakta medis resmi yang perlu diketahui:',
+        ],
+        tips: [
+          'Mitos: "Makan makanan manis sekali langsung bikin kena diabetes." -> FAKTA: Diabetes terjadi akibat penumpukan kalori berlebih selama bertahun-tahun, gaya hidup kurang bergerak, obesitas, dan faktor keturunan.',
+          'Mitos: "Penderita diabetes tidak boleh makan nasi sama sekali." -> FAKTA: Tetap boleh makan nasi dalam porsi terukur (1/4 piring), dan lebih dianjurkan memilih beras merah atau karbohidrat tinggi serat.',
+          'Mitos: "Obat diabetes merusak ginjal jika diminum rutin." -> FAKTA: Justru kadar gula darah yang tinggi dan tidak terkontrol yang merusak pembuluh darah ginjal hingga memicu gagal ginjal. Obat yang diresepkan dokter telah teruji aman.',
+          'Mitos: "Luka kecil di kaki tidak berbahaya." -> FAKTA: Pada penyandang diabetes, luka kecil bisa berkembang cepat menjadi infeksi besar (luka diabetik) karena sirkulasi darah dan saraf terganggu.',
+        ],
+      },
+      {
+        heading: 'Pesan Utama Tenaga Kesehatan',
+        content: [
+          'Jangan mudah percaya mitos pengobatan alternatif instan. Selalu konsultasikan pengelolaan gula darah kepada dokter atau petugas kesehatan di Puskesmas terdekat.',
+        ],
+      },
+    ],
+    sources: [
+      {
+        institution: 'Puskesmas Karangawen I & PERKENI',
+        documentTitle: 'Buku Saku Edukasi Mitos vs Fakta Diabetes PANTAS',
+        reviewDate: 'Ditinjau: 2024',
       },
     ],
   },
@@ -323,95 +371,43 @@ export const EDUCATION_ARTICLES: EducationArticle[] = [
   },
   {
     id: 'edu-tanda-bahaya',
-    title: 'Kenali Tanda Bahaya (Red Flags): Kapan Harus Segera ke IGD',
+    title: 'Kapan Perlu Kontrol ke Puskesmas: Mengenali Gejala Perlu Evaluasi Medis',
     category: 'umum',
     readTimeMinutes: 3,
     summary:
-      'Beberapa gejala fisik membutuhkan penanganan medis darurat dan tidak boleh ditunggu di rumah. Ketahui tanda bahaya pada gula darah dan tensi.',
+      'Pahami tanda-tanda tubuh yang memerlukan pemeriksaan lanjutan oleh dokter di Puskesmas Karangawen I atau faskes terdekat untuk penanganan sedini mungkin.',
     sections: [
       {
-        heading: 'Tanda Bahaya Terkait Tekanan Darah (Krisis Hipertensi)',
+        heading: 'Gejala Terkait Tekanan Darah yang Perlu Dikontrol ke Puskesmas',
         content: [
-          'Segera cari pertolongan IGD terdekat bila tekanan darah sangat tinggi disertai satu atau lebih gejala berikut:',
+          'Segera kunjungi Puskesmas untuk pemeriksaan dokter apabila tekanan darah tinggi disertai gejala berikut:',
         ],
         tips: [
-          'Nyeri dada yang berat, terasa seperti tertindih beban berat, atau menjalar ke leher dan lengan kiri.',
-          'Sesak napas hebat yang muncul tiba-tiba.',
-          'Sakit kepala sangat hebat dan tak tertahankan disertai muntah menyembur.',
-          'Pandangan mendadak gelap atau kabur secara mendadak.',
-          'Kelemahan atau kelumpuhan separuh anggota tubuh, bicara pelo, atau wajah tampak miring (tanda stroke).',
+          'Rasa tegang atau kaku di bagian tengkuk yang tidak kunjung reda.',
+          'Pusing berputar atau sakit kepala berat berulang.',
+          'Keluhan nyeri dada atau napas terasa berat saat beraktivitas ringan.',
+          'Pandangan agak kabur atau mata berkunang-kunang.',
         ],
       },
       {
-        heading: 'Tanda Bahaya Terkait Gula Darah',
+        heading: 'Gejala Terkait Gula Darah yang Perlu Dievaluasi',
         content: [
-          '1. Hipoglikemia Berat (Gula darah <70 mg/dL): Lemas mendadak, gemetar tak terkendali, keringat dingin membasahi pakaian, linglung, atau pingsan.',
-          '2. Krisis Hiperglikemia / Ketoasidosis: Gula darah sangat tinggi disertai muntah terus-menerus, napas terengah-engah cepat dan dalam berbau buah, serta penurunan kesadaran.',
+          '1. Gula Darah Rendah (Hipoglikemia): Lemas mendadak, gemetar, dan keringat dingin. Segera konsumsi sumber gula (segelas teh manis hangat) lalu periksakan ke Puskesmas jika keluhan berulang.',
+          '2. Gula Darah Tinggi: Sering haus hebat, sering kencing malam hari, berat badan turun drastis, atau timbul luka di kaki yang lambat sembuh.',
         ],
       },
       {
-        heading: 'Tindakan yang Harus Dilakukan',
+        heading: 'Langkah Pemeriksaan Lanjutan di Puskesmas',
         content: [
-          'Segera bawa pasien ke fasilitas pelayanan kesehatan terdekat (IGD Rumah Sakit atau Puskesmas 24 Jam).',
-          'Jangan memberikan obat penurun tensi atau suntikan insulin sembarangan tanpa petunjuk dokter jaga.',
-        ],
-      },
-    ],
-    sources: [
-      {
-        institution: 'Kemenkes RI & IDI (Ikatan Dokter Indonesia)',
-        documentTitle: 'Panduan Praktik Klinis Penanganan Kegawatdaruratan Medik',
-        reviewDate: 'Ditinjau: Oktober 2024',
-      },
-    ],
-  },
-  {
-    id: 'edu-mitos-menu-dm',
-    title: 'Mitos vs Fakta Diabetes & Panduan Contoh Menu Sehari (Diet 3J)',
-    category: 'diabetes',
-    readTimeMinutes: 4,
-    summary:
-      'Kupas tuntas mitos konsumsi nasi, mitos obat merusak ginjal, serta panduan menu makan sehat sehari (Pagi, Siang, Malam, Selingan) lengkap dengan prinsip 3J.',
-    sections: [
-      {
-        heading: 'Mitos vs Fakta Seputar Diabetes',
-        content: [
-          'Banyak informasi yang kurang tepat beredar di masyarakat mengenai diabetes melitus. Mari kita luruskan faktanya:',
-        ],
-        tips: [
-          'Mitos: Makan manis sekali langsung terkena diabetes. -> Fakta: Diabetes terjadi karena penumpukan gula dan kalori berlebih selama bertahun-tahun, ditambah faktor obesitas dan riwayat keturunan.',
-          'Mitos: Penderita diabetes tidak boleh makan nasi sama sekali. -> Fakta: Boleh makan nasi dalam porsi terukur (1/4 piring), dan lebih dianjurkan memilih beras merah atau karbohidrat tinggi serat.',
-          'Mitos: Obat diabetes merusak ginjal jika diminum terus. -> Fakta: Justru kadar gula darah yang tinggi dan tidak terkontrol yang merusak pembuluh darah ginjal hingga memicu gagal ginjal.',
-          'Mitos: Luka kecil di kaki tidak berbahaya. -> Fakta: Pada penyandang diabetes, luka kecil bisa cepat membesar, bernanah, dan sulit sembuh karena sirkulasi darah terganggu.',
-        ],
-      },
-      {
-        heading: 'Prinsip Diet 3J: Jumlah, Jenis, Jadwal',
-        content: [
-          '1. Jumlah: Porsi tidak berlebihan. Terapkan prinsip Piring T: 1/2 piring sayur & buah, 1/4 nasi merah, 1/4 lauk berprotein (ikan, ayam tanpa kulit, tahu/tempe).',
-          '2. Jenis: HINDARI gula pasir, sirup, kue manis, boba, soda, gorengan, jeroan, dan makanan super asin. PILIH beras merah, ubi rebus, sayur hijau, ikan kukus/bakar, dan buah segar (apel, pir, jambu).',
-          '3. Jadwal: Makan teratur dengan 3x makan utama + 2x selingan sehat. Jangan telat makan agar gula darah stabil.',
-        ],
-      },
-      {
-        heading: 'Contoh Menu Sehari PANTAS',
-        content: [
-          'Berikut inspirasi menu makan harian yang sehat dan bergizi:',
-        ],
-        tips: [
-          'Pagi: Nasi merah + telur rebus + sayur bayam bening.',
-          'Selingan Pagi (Pukul 10.00): 1 buah apel kecil atau pir.',
-          'Siang: Nasi merah + ikan bakar/kukus + tahu kukus + lalapan sayur segar.',
-          'Selingan Sore (Pukul 16.00): Ubi rebus atau kacang sangrai.',
-          'Malam: Nasi merah + tumis dada ayam tanpa kulit + capcay sayur.',
-          'Kebutuhan Cairan: Minum air putih minimal 8 gelas per hari.',
+          'Kunjungi Puskesmas Karangawen I atau faskes terdekat pada jam pelayanan untuk konsultasi dengan dokter dan pemeriksaan laboratorium penunjang.',
+          'Bawa catatan hasil skrining mandiri PANTAS ini agar petugas kesehatan dapat memantau riwayat Anda.',
         ],
       },
     ],
     sources: [
       {
         institution: 'Puskesmas Karangawen I & Kemenkes RI',
-        documentTitle: 'Buku Panduan Edukasi Diabetes Melitus PANTAS',
+        documentTitle: 'Panduan Pelayanan Skrining PTM Puskesmas',
         reviewDate: 'Ditinjau: 2024',
       },
     ],
@@ -477,4 +473,3 @@ export const EDUCATION_ARTICLES: EducationArticle[] = [
     ],
   },
 ];
-

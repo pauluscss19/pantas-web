@@ -49,7 +49,7 @@ export function evaluateDiabetes(input: DiabetesFormInput): EvaluationResult {
       message:
         'Ditemukan kondisi atau gejala yang memerlukan pertolongan tenaga medis segera. Jangan menunda penanganan.',
       action:
-        'Segera hubungi atau datangi Instalasi Gawat Darurat (IGD) atau Puskesmas/fasilitas kesehatan terdekat. Jangan mengonsumsi obat sembarangan.',
+        'Konsultasikan kondisi ini kepada dokter atau petugas kesehatan di Puskesmas Karangawen I atau fasilitas kesehatan terdekat.',
       urgency: 'segera_ke_fasilitas_kesehatan',
       symptoms: redFlagSymptoms,
     };
@@ -256,11 +256,8 @@ export function evaluateDiabetes(input: DiabetesFormInput): EvaluationResult {
   // 4. Next Steps (Directly aligned with Document Table)
   const nextSteps: string[] = [];
 
-  if (redFlags.isTriggered) {
-    nextSteps.push('SEGERA KE IGD / FASILITAS KESEHATAN: Ditemukan kondisi darurat medis. Jangan menunda pertolongan.');
-  }
-
   if (measurement.statusLevel === 'tinggi') {
+    nextSteps.push('Konsultasikan hasil ini dan lakukan kontrol rutin ke Puskesmas Karangawen I atau faskes terdekat.');
     nextSteps.push('Cek ulang setiap bulan ke Puskesmas atau fasilitas kesehatan terdekat.');
     nextSteps.push('Bila diberikan resep dokter, minum obat teratur sesuai anjuran dan jangan menghentikan obat sendiri.');
     nextSteps.push('Diet seimbang: Terapkan prinsip Piring T (1/2 piring sayur/buah, 1/4 nasi, 1/4 lauk).');

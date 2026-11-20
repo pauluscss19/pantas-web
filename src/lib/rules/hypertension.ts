@@ -58,7 +58,7 @@ export function evaluateHipertensi(input: HipertensiFormInput): EvaluationResult
       message:
         'Ditemukan keluhan atau nilai tekanan darah yang memerlukan pertolongan tenaga medis segera. Jangan menunda untuk mencari bantuan.',
       action:
-        'Segera bawa atau datangi Instalasi Gawat Darurat (IGD) rumah sakit atau Puskesmas terdekat. Hindari aktivitas berat dan tetap tenang dalam perjalanan.',
+        'Konsultasikan kondisi ini kepada dokter atau petugas kesehatan di Puskesmas Karangawen I atau fasilitas kesehatan terdekat.',
       urgency: 'segera_ke_fasilitas_kesehatan',
       symptoms: redFlagSymptoms,
     };
@@ -234,11 +234,8 @@ export function evaluateHipertensi(input: HipertensiFormInput): EvaluationResult
   // 4. Next Steps (Directly aligned with Document Table)
   const nextSteps: string[] = [];
 
-  if (redFlags.isTriggered) {
-    nextSteps.push('SEGERA KE IGD / FASILITAS KESEHATAN: Ditemukan kondisi tanda bahaya krisis hipertensi atau keluhan darurat.');
-  }
-
   if (measurement.statusLevel === 'tinggi') {
+    nextSteps.push('Konsultasikan hasil tekanan darah ini dan lakukan kontrol rutin ke Puskesmas Karangawen I atau faskes terdekat.');
     nextSteps.push('Mengonsumsi obat antihipertensi secara teratur sesuai anjuran dokter.');
     nextSteps.push('Tidak menghentikan obat tanpa konsultasi dengan dokter, meskipun tekanan darah sudah terasa normal.');
     nextSteps.push('Diet Rendah Garam: Garam maksimal 1 sdt/hari (5 gram). Hindari ikan asin, kerupuk, mie instan, makanan kaleng, fast food, gorengan, jeroan, santan kental, dan kulit ayam. Perbanyak sayur, buah, ikan bakar/kukus, dan tahu tempe kukus.');

@@ -42,16 +42,21 @@ GRANT ALL ON TABLE public.checkups TO service_role;
 
 -- 5. Drop existing policies if re-running script (mencegah error "policy already exists")
 DROP POLICY IF EXISTS "Users can only view their own checkups" ON public.checkups;
+DROP POLICY IF EXISTS "Users and admins can view checkups" ON public.checkups;
 DROP POLICY IF EXISTS "Users can only insert their own checkups" ON public.checkups;
 DROP POLICY IF EXISTS "Users can only update their own checkups" ON public.checkups;
 DROP POLICY IF EXISTS "Users can only delete their own checkups" ON public.checkups;
 
--- 6. RLS Policy: Users can only SELECT (read) their own checkup data
-CREATE POLICY "Users can only view their own checkups"
+-- 6. RLS Policy: Users can view their own checkups, and Admins can view all patient checkups
+CREATE POLICY "Users and admins can view checkups"
 ON public.checkups
 FOR SELECT
 TO authenticated
-USING (auth.uid() = user_id);
+USING (
+    auth.uid() = user_id
+    OR (auth.jwt() ->> 'email') IN ('paulussaputraa19@gmail.com', 'admin@pantas.id', 'admin@puskesmas.id', 'admin@karangawen.id')
+    OR (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
+);
 
 -- 7. RLS Policy: Users can only INSERT (create) checkup records for themselves
 CREATE POLICY "Users can only insert their own checkups"

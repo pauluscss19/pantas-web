@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -14,9 +14,11 @@ import {
   Cloud,
   ShieldCheck,
   Lock,
+  Users,
 } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 import { AuthModal } from '../auth/AuthModal';
+import { isAdminUser } from '@/lib/auth/admin';
 
 interface NavItem {
   name: string;
@@ -24,7 +26,7 @@ interface NavItem {
   icon: React.ComponentType<{ className?: string }>;
 }
 
-const NAV_ITEMS: NavItem[] = [
+const BASE_NAV_ITEMS: NavItem[] = [
   { name: 'Beranda', href: '/', icon: Home },
   { name: 'Pemeriksaan', href: '/pemeriksaan', icon: Activity },
   { name: 'Riwayat', href: '/riwayat', icon: History },
@@ -36,6 +38,20 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, signOut } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+
+  const isAdmin = useMemo(() => {
+    return isAdminUser(user?.email, user?.user_metadata);
+  }, [user]);
+
+  const navItems = useMemo(() => {
+    if (isAdmin) {
+      return [
+        ...BASE_NAV_ITEMS,
+        { name: 'Data Pasien', href: '/admin', icon: Users },
+      ];
+    }
+    return BASE_NAV_ITEMS;
+  }, [isAdmin]);
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
@@ -94,20 +110,36 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
           {/* Navigation Links */}
           <nav className="space-y-1.5" aria-label="Navigasi Utama Desktop">
-            {NAV_ITEMS.map((item) => {
+            {navItems.map((item) => {
               const active = isActive(item.href);
               const Icon = item.icon;
+              const isSpecialAdmin = item.href === '/admin';
+
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
                     active
-                      ? 'bg-pantas-soft text-pantas-primary font-semibold shadow-2xs'
+                      ? isSpecialAdmin
+                        ? 'bg-purple-100 text-purple-900 font-bold shadow-2xs'
+                        : 'bg-pantas-soft text-pantas-primary font-semibold shadow-2xs'
+                      : isSpecialAdmin
+                      ? 'text-purple-700 hover:bg-purple-50 hover:text-purple-900 font-semibold'
                       : 'text-pantas-muted hover:text-pantas-dark hover:bg-neutral-50'
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${active ? 'text-pantas-primary stroke-[2.3]' : 'text-pantas-muted'}`} />
+                  <Icon
+                    className={`w-5 h-5 ${
+                      active
+                        ? isSpecialAdmin
+                          ? 'text-purple-800 stroke-[2.4]'
+                          : 'text-pantas-primary stroke-[2.3]'
+                        : isSpecialAdmin
+                        ? 'text-purple-600'
+                        : 'text-pantas-muted'
+                    }`}
+                  />
                   <span>{item.name}</span>
                 </Link>
               );
@@ -122,7 +154,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               <div className="flex items-center gap-2 px-1">
                 <Cloud className="w-4 h-4 text-pantas-primary shrink-0" />
                 <div className="overflow-hidden min-w-0">
-                  <p className="text-xs font-semibold text-pantas-primary truncate">Akun Cloud Aktif</p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-xs font-semibold text-pantas-primary truncate">Akun Aktif</p>
+                    {isAdmin && (
+                      <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-pantas-purple text-white shrink-0">
+                        Admin
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-pantas-muted truncate">{user.email}</p>
                 </div>
               </div>
@@ -200,7 +239,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
           </Link>
 
-          <div className="shrink-0 ml-2">
+          <div className="shrink-0 ml-2 flex items-center gap-1.5">
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="px-2 py-1 text-xs font-semibold bg-pantas-purple text-white rounded flex items-center gap-1 shadow-2xs hover:bg-pantas-purple-hover"
+                title="Panel Data Pasien"
+              >
+                <Users className="w-3.5 h-3.5" />
+                <span className="text-[11px]">Admin</span>
+              </Link>
+            )}
+
             {user ? (
               <button
                 onClick={() => signOut()}
@@ -225,7 +275,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 max-w-4xl w-full mx-auto p-4 sm:p-6 md:p-8">
+        <main className="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 md:p-8">
           {children}
         </main>
       </div>
@@ -235,21 +285,37 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-xs border-t border-pantas-border flex items-center justify-around py-1 px-1 safe-area-bottom shadow-lg"
         aria-label="Navigasi Utama Ponsel"
       >
-        {NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           const active = isActive(item.href);
           const Icon = item.icon;
+          const isSpecialAdmin = item.href === '/admin';
+
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center py-1.5 px-2 rounded-lg text-center transition-all min-w-[64px] min-h-[48px] ${
+              className={`flex flex-col items-center justify-center py-1.5 px-1.5 rounded-lg text-center transition-all min-w-[56px] min-h-[48px] ${
                 active
-                  ? 'text-pantas-primary font-bold bg-pantas-soft/60'
+                  ? isSpecialAdmin
+                    ? 'text-purple-800 font-bold bg-purple-100'
+                    : 'text-pantas-primary font-bold bg-pantas-soft/60'
+                  : isSpecialAdmin
+                  ? 'text-purple-700'
                   : 'text-pantas-muted hover:text-pantas-dark'
               }`}
             >
-              <Icon className={`w-5 h-5 ${active ? 'text-pantas-primary stroke-[2.3]' : 'text-pantas-muted'}`} />
-              <span className="text-[11px] mt-1 leading-none">{item.name}</span>
+              <Icon
+                className={`w-5 h-5 ${
+                  active
+                    ? isSpecialAdmin
+                      ? 'text-purple-800 stroke-[2.4]'
+                      : 'text-pantas-primary stroke-[2.3]'
+                    : isSpecialAdmin
+                    ? 'text-purple-600'
+                    : 'text-pantas-muted'
+                }`}
+              />
+              <span className="text-[10px] mt-1 leading-none">{item.name}</span>
             </Link>
           );
         })}

@@ -161,43 +161,17 @@ export function ResultView({ result, onReset, isSavedInitial = false }: ResultVi
         </div>
       </div>
 
-      {/* 1. KONDISI TINDAKAN SEGERA / TANDA BAHAYA (RED FLAGS) */}
-      {result.redFlags.isTriggered && (
-        <section
-          aria-label="Peringatan Tanda Bahaya Medis"
-          className="p-4 sm:p-5 bg-pantas-red-bg border-2 border-pantas-red rounded-xl text-pantas-dark space-y-3 shadow-xs"
-        >
-          <div className="flex items-start gap-3">
-            <div className="p-2 rounded-lg bg-pantas-red text-white shrink-0 mt-0.5">
-              <AlertCircle className="w-6 h-6" />
-            </div>
-            <div className="space-y-1 min-w-0">
-              <span className="inline-block px-2 py-0.5 bg-pantas-red text-white text-[11px] font-bold rounded uppercase">
-                Tindakan Medis Segera
-              </span>
-              <h2 className="text-base sm:text-lg font-bold text-pantas-red leading-tight">
-                {result.redFlags.title}
-              </h2>
-              <p className="text-xs sm:text-sm font-medium text-pantas-dark leading-relaxed">
-                {result.redFlags.message}
-              </p>
-            </div>
+      {/* Notice Kontrol Puskesmas jika berstatus tinggi atau perhatian */}
+      {result.measurement.statusLevel === 'tinggi' && (
+        <div className="p-4 bg-pantas-soft border border-pantas-primary rounded-xl text-pantas-dark flex items-start gap-3 shadow-xs">
+          <CheckCircle2 className="w-5 h-5 text-pantas-primary shrink-0 mt-0.5" />
+          <div className="text-xs sm:text-sm">
+            <p className="font-bold text-pantas-primary">Pemberitahuan Kontrol Puskesmas:</p>
+            <p className="text-pantas-muted mt-0.5 leading-relaxed">
+              Hasil pengukuran berada di atas batas rujukan awal. Disarankan untuk berkonsultasi dan melakukan pemeriksaan lanjutan ke Puskesmas Karangawen I atau faskes terdekat.
+            </p>
           </div>
-
-          <div className="bg-white/90 p-3.5 rounded-lg border border-pantas-red-border text-sm space-y-2">
-            <p className="font-bold text-pantas-red text-xs sm:text-sm">Gejala/Kondisi yang Terdeteksi:</p>
-            <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm text-neutral-800">
-              {result.redFlags.symptoms.map((sym, idx) => (
-                <li key={idx}>{sym}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="p-3 bg-pantas-red text-white rounded-lg font-medium text-xs sm:text-sm flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-            <span className="font-bold underline shrink-0">Instruksi:</span>
-            <span>{result.redFlags.action}</span>
-          </div>
-        </section>
+        </div>
       )}
 
       {/* 2. ANGKA PEMERIKSAAN & INTERPRETASI SINGKAT */}

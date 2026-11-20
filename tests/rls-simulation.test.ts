@@ -28,8 +28,12 @@ class SimulatedSupabaseDatabase {
     return { success: true };
   }
 
-  // Simulate SQL: SELECT * FROM checkups WHERE (auth.uid() = user_id)
-  select(currentAuthUid: string): DatabaseRow[] {
+  // Simulate SQL: SELECT * FROM checkups WHERE (auth.uid() = user_id OR auth.email IN ('admin@...'))
+  select(currentAuthUid: string, email?: string): DatabaseRow[] {
+    const isAdmin = email && ['paulussaputraa19@gmail.com', 'admin@pantas.id'].includes(email);
+    if (isAdmin) {
+      return this.rows;
+    }
     return this.rows.filter((r) => r.user_id === currentAuthUid);
   }
 
@@ -141,5 +145,27 @@ assert(db.select(USER_B_ID).length === 0, 'Data User B terhapus setelah dihapus 
 // User A's data remains untouched
 assert(db.select(USER_A_ID).length === 1, 'Data User A tetap aman dan utuh');
 
-console.log('\n🎉 ALL ROW LEVEL SECURITY (RLS) MULTI-ACCOUNT ISOLATION TESTS PASSED!\n');
+console.log('\n--- 6. Testing Admin Policy (Admin can view all patient records) ---');
+// Insert a new record for User B so we have both User A and User B records
+db.insert(USER_B_ID, {
+  id: 'checkup-b-02',
+  user_id: USER_B_ID,
+  checkup_type: 'diabetes',
+  value_text: 'GDP 135 mg/dL',
+});
+const ADMIN_UID = '99999999-9999-9999-9999-999999999999';
+const adminRows = db.select(ADMIN_UID, 'paulussaputraa19@gmail.com');
+assert(
+  adminRows.length === 2 && adminRows.some((r) => r.user_id === USER_A_ID) && adminRows.some((r) => r.user_id === USER_B_ID),
+  'Akun Admin Puskesmas (paulussaputraa19@gmail.com) DAPAT melihat seluruh data pasien (User A & User B)'
+);
+
+// Regular non-admin user cannot see other patients
+const regularRows = db.select(USER_A_ID, 'user-biasa@gmail.com');
+assert(
+  regularRows.length === 1 && !regularRows.some((r) => r.user_id === USER_B_ID),
+  'Pengguna reguler tetap TIDAK DAPAT melihat data pasien lain'
+);
+
+console.log('\n🎉 ALL ROW LEVEL SECURITY (RLS) & ADMIN ISOLATION TESTS PASSED!\n');
 
