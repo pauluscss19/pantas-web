@@ -213,16 +213,6 @@ export default function AdminPage() {
             </p>
           </div>
 
-          <div className="p-4 rounded-lg bg-neutral-50 border border-neutral-200 text-left text-xs text-neutral-700 space-y-1.5">
-            <p className="font-semibold text-pantas-dark flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-pantas-primary shrink-0" />
-              <span>Ketentuan Akses Data Pasien:</span>
-            </p>
-            <p className="text-pantas-muted">
-              Sesuai regulasi privasi data medis dan standar Row Level Security (RLS), rekapitulasi data pasien hanya dibuka bagi akun petugas berwenang (misal: <code>paulussaputraa19@gmail.com</code> atau email admin instansi).
-            </p>
-          </div>
-
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
             {!user ? (
               <button

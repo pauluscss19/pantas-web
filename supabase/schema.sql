@@ -54,7 +54,8 @@ FOR SELECT
 TO authenticated
 USING (
     auth.uid() = user_id
-    OR (auth.jwt() ->> 'email') IN ('paulussaputraa19@gmail.com', 'admin@pantas.id', 'admin@puskesmas.id', 'admin@karangawen.id')
+    OR (auth.jwt() ->> 'email') IN ('admin@pantas.id', 'admin@puskesmas.id', 'admin@karangawen.id')
+    OR (auth.jwt() ->> 'email') LIKE 'admin@%'
     OR (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin'
 );
 

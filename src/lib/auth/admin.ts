@@ -4,7 +4,6 @@
  */
 
 const DEFAULT_ADMIN_EMAILS = [
-  'paulussaputraa19@gmail.com',
   'admin@pantas.id',
   'admin@puskesmas.id',
   'admin@karangawen.id',
@@ -24,10 +23,17 @@ export function isAdminUser(email?: string | null, userMetadata?: any): boolean 
   const cleanEmail = email.trim().toLowerCase();
   const adminList = getAdminEmails();
   
+  // 1. Explicit admin emails
   if (adminList.includes(cleanEmail)) {
     return true;
   }
+
+  // 2. Any designated admin email starting with admin@
+  if (cleanEmail.startsWith('admin@')) {
+    return true;
+  }
   
+  // 3. Supabase Auth user_metadata role
   if (userMetadata?.role === 'admin' || userMetadata?.isAdmin === true) {
     return true;
   }

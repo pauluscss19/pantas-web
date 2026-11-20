@@ -30,7 +30,7 @@ class SimulatedSupabaseDatabase {
 
   // Simulate SQL: SELECT * FROM checkups WHERE (auth.uid() = user_id OR auth.email IN ('admin@...'))
   select(currentAuthUid: string, email?: string): DatabaseRow[] {
-    const isAdmin = email && ['paulussaputraa19@gmail.com', 'admin@pantas.id'].includes(email);
+    const isAdmin = email && (['admin@pantas.id', 'admin@puskesmas.id'].includes(email) || email.startsWith('admin@'));
     if (isAdmin) {
       return this.rows;
     }
@@ -154,17 +154,17 @@ db.insert(USER_B_ID, {
   value_text: 'GDP 135 mg/dL',
 });
 const ADMIN_UID = '99999999-9999-9999-9999-999999999999';
-const adminRows = db.select(ADMIN_UID, 'paulussaputraa19@gmail.com');
+const adminRows = db.select(ADMIN_UID, 'admin@puskesmas.id');
 assert(
   adminRows.length === 2 && adminRows.some((r) => r.user_id === USER_A_ID) && adminRows.some((r) => r.user_id === USER_B_ID),
-  'Akun Admin Puskesmas (paulussaputraa19@gmail.com) DAPAT melihat seluruh data pasien (User A & User B)'
+  'Akun Admin Puskesmas (admin@puskesmas.id) DAPAT melihat seluruh data pasien (User A & User B)'
 );
 
-// Regular non-admin user cannot see other patients
-const regularRows = db.select(USER_A_ID, 'user-biasa@gmail.com');
+// Regular non-admin user (including paulussaputraa19@gmail.com) cannot see other patients
+const regularRows = db.select(USER_A_ID, 'paulussaputraa19@gmail.com');
 assert(
   regularRows.length === 1 && !regularRows.some((r) => r.user_id === USER_B_ID),
-  'Pengguna reguler tetap TIDAK DAPAT melihat data pasien lain'
+  'Pengguna reguler (termasuk paulussaputraa19@gmail.com) tetap TIDAK DAPAT melihat data pasien lain'
 );
 
 console.log('\n🎉 ALL ROW LEVEL SECURITY (RLS) & ADMIN ISOLATION TESTS PASSED!\n');
